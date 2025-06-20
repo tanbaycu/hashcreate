@@ -93,15 +93,13 @@ class BenchmarkResult(db.Model):
 def init_db():
     """Initialize database tables if they don't exist"""
     try:
-        with app.app_context():
-            db.create_all()
-            print("Database tables initialized successfully!")
+        db.create_all()
+        print("Database tables initialized successfully!")
     except Exception as e:
         print(f"Error initializing database tables: {e}")
 
-# Initialize database on first request
-@app.before_first_request
-def create_tables():
+# Initialize database tables immediately
+with app.app_context():
     init_db()
 
 # No longer need uploads folder - using database storage
