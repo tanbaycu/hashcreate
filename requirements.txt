@@ -1,0 +1,9 @@
+Flask
+bcrypt
+argon2-cffi
+Werkzeug
+user-agents
+psycopg2-binary
+Flask-SQLAlchemy
+gunicorn
+

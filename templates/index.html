@@ -1,0 +1,2280 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Hash Generator Pro - Ultimate Cryptographic Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <!-- Thử nhiều CDN cho QRCode library -->
+    <script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js" 
+            onerror="this.onerror=null; this.src='https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js'"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800;900&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'mono': ['JetBrains Mono', 'monospace'],
+                        'sans': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'dark': '#0a0a0a',
+                        'darker': '#050505',
+                        'light-gray': '#1a1a1a',
+                        'medium-gray': '#2a2a2a',
+                        'accent': '#3a3a3a',
+                        'border': '#1f1f1f',
+                        'light-bg': '#f8fafc',
+                        'light-card': '#ffffff',
+                        'light-border': '#e2e8f0',
+                        'light-text': '#1e293b',
+                        'light-muted': '#64748b',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                        'fade-in-up': 'fadeInUp 0.6s ease-out',
+                        'scale-in': 'scaleIn 0.3s ease-out',
+                        'bounce-in': 'bounceIn 0.6s ease-out',
+                        'slide-in-right': 'slideInRight 0.5s ease-out',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'spin-slow': 'spin 3s linear infinite',
+                        'wiggle': 'wiggle 1s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        glow: {
+                            '0%': { boxShadow: '0 0 5px rgba(59, 130, 246, 0.3)' },
+                            '100%': { boxShadow: '0 0 20px rgba(59, 130, 246, 0.6)' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(100px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        fadeInUp: {
+                            '0%': { transform: 'translateY(30px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        scaleIn: {
+                            '0%': { transform: 'scale(0.9)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' },
+                        },
+                        bounceIn: {
+                            '0%': { transform: 'scale(0.3)', opacity: '0' },
+                            '50%': { transform: 'scale(1.05)' },
+                            '70%': { transform: 'scale(0.9)' },
+                            '100%': { transform: 'scale(1)', opacity: '1' },
+                        },
+                        slideInRight: {
+                            '0%': { transform: 'translateX(100px)', opacity: '0' },
+                            '100%': { transform: 'translateX(0)', opacity: '1' },
+                        },
+                        wiggle: {
+                            '0%, 100%': { transform: 'rotate(-3deg)' },
+                            '50%': { transform: 'rotate(3deg)' },
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Dark Mode Styles */
+        .glass-effect {
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            background: rgba(10, 10, 10, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        /* Light Mode Styles */
+        .light .glass-effect {
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .floating-header {
+            position: fixed;
+            top: 12px;
+            left: 12px;
+            right: 12px;
+            z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 20px;
+        }
+        
+        /* Hash Card Styles */
+        .hash-card {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(42, 42, 42, 0.95) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .light .hash-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        }
+        
+        /* Input Field Styles */
+        .input-field {
+            background: rgba(26, 26, 26, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #ffffff;
+        }
+        
+        .light .input-field {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            color: #1e293b;
+        }
+        
+        .input-field:focus, .light .input-field:focus {
+            border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            outline: none;
+        }
+        
+        .light .input-field:focus {
+            background: rgba(255, 255, 255, 0.95);
+        }
+        
+        /* Button Styles */
+        .btn-primary {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            color: #ffffff;
+        }
+        
+        .light .btn-primary {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            color: #1e293b;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+        
+        .light .btn-primary::before {
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+        }
+        
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .light .btn-primary:hover {
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Result Box Styles */
+        .result-box {
+            background: rgba(5, 5, 5, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            font-family: 'JetBrains Mono', monospace;
+            position: relative;
+            color: #ffffff;
+        }
+        
+        .light .result-box {
+            background: rgba(248, 250, 252, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            color: #1e293b;
+        }
+        
+        /* Category Card Styles */
+        .category-card {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(42, 42, 42, 0.8) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .light .category-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(248, 250, 252, 0.8) 100%);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+        
+        .light .category-card:hover {
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Text Styles */
+        .gradient-text {
+            background: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .light .gradient-text {
+            background: linear-gradient(135deg, #1e293b 0%, #475569 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Section Divider */
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        }
+        
+        .light .section-divider {
+            background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.1), transparent);
+        }
+        
+        /* Theme Toggle */
+        .theme-toggle {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: #374151;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle.active {
+            background: #3b82f6;
+        }
+        
+        .theme-toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .theme-toggle.active .theme-toggle-slider {
+            transform: translateX(30px);
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .light .progress-bar {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #06b6d4);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+        
+        /* Tab Styles */
+        .tab-button {
+            padding: 12px 24px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            color: #9ca3af;
+        }
+        
+        .light .tab-button {
+            color: #64748b;
+        }
+        
+        .tab-button.active {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.3);
+            color: #3b82f6;
+        }
+        
+        .tab-button:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+        }
+        
+        .light .tab-button:hover:not(.active) {
+            background: rgba(0, 0, 0, 0.05);
+            color: #1e293b;
+        }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background: rgba(26, 26, 26, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            color: #ffffff;
+        }
+        
+        .light .modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: #1e293b;
+        }
+        
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+        
+        /* Drag Drop Zone */
+        .drag-drop-zone {
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .light .drag-drop-zone {
+            border-color: rgba(0, 0, 0, 0.2);
+        }
+        
+        .drag-drop-zone:hover,
+        .drag-drop-zone.dragover {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.05);
+        }
+        
+        /* Strength Bar */
+        .strength-bar {
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .light .strength-bar {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        .strength-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: all 0.5s ease;
+        }
+        
+        .strength-weak { background: #ef4444; }
+        .strength-medium { background: #f59e0b; }
+        .strength-strong { background: #10b981; }
+        .strength-very-strong { background: #06b6d4; }
+        
+        /* Pulse Animation */
+        .pulse-dot {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(26, 26, 26, 0.5);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .light ::-webkit-scrollbar-track {
+            background: rgba(248, 250, 252, 0.5);
+        }
+        
+        .light ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .light ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Info Panel Styles */
+        .info-panel {
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .light .info-panel {
+            background: rgba(248, 250, 252, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Status Indicators */
+        .status-online {
+            background: #10b981;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+        
+        .status-processing {
+            background: #f59e0b;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+        }
+        
+        .status-error {
+            background: #ef4444;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+        }
+        
+        /* Hover Effects */
+        .hover-lift {
+            transition: transform 0.2s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-2px);
+        }
+        
+        /* Loading Spinner */
+        .loading-spinner {
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-left: 2px solid #3b82f6;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        
+        .light .loading-spinner {
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-left: 2px solid #3b82f6;
+        }
+        
+        /* Notification Styles */
+        .notification {
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .light .notification {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Selection Styles */
+        ::selection {
+            background: rgba(59, 130, 246, 0.3);
+        }
+        
+        .light ::selection {
+            background: rgba(59, 130, 246, 0.2);
+        }
+        
+        /* Focus Styles */
+        .focus-ring:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        
+        /* Print Styles */
+        @media print {
+            .floating-header,
+            .modal-overlay,
+            button {
+                display: none !important;
+            }
+        }
+        
+        /* High Contrast Mode */
+        @media (prefers-contrast: high) {
+            .glass-effect {
+                background: rgba(0, 0, 0, 0.95);
+                border: 2px solid #ffffff;
+            }
+            
+            .light .glass-effect {
+                background: rgba(255, 255, 255, 0.95);
+                border: 2px solid #000000;
+            }
+        }
+        
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-dark text-white font-sans min-h-screen overflow-x-hidden transition-colors duration-300">
+    <!-- Floating Header -->
+    <header class="floating-header glass-effect">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center animate-float">
+                        <i data-lucide="hash" class="w-7 h-7 text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-mono font-bold gradient-text">HashGen Pro</h1>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 light:text-gray-600 font-mono">Ultimate Cryptographic Tool</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <!-- Theme Toggle -->
+                    <div class="theme-toggle hover-lift" id="themeToggle" role="button" tabindex="0" aria-label="Toggle theme">
+                        <div class="theme-toggle-slider">
+                            <i data-lucide="moon" class="w-4 h-4 text-gray-600" id="themeIcon"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="hidden md:flex items-center space-x-2">
+                        <div class="pulse-dot w-2 h-2 status-online rounded-full"></div>
+                        <span class="text-sm font-mono text-gray-400 dark:text-gray-400 light:text-gray-600">Online</span>
+                    </div>
+                    
+                    <button id="shortcutsBtn" class="p-2 rounded-lg hover:bg-gray-700 dark:hover:bg-gray-700 light:hover:bg-gray-200 transition-colors hover-lift focus-ring" aria-label="Show keyboard shortcuts">
+                        <i data-lucide="keyboard" class="w-5 h-5"></i>
+                    </button>
+                    
+                    <span class="text-sm font-mono text-gray-500 bg-gray-800 dark:bg-gray-800 light:bg-gray-200 dark:text-gray-400 light:text-gray-600 px-3 py-1 rounded-full">v4.0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="pt-32 pb-16">
+        <div class="container mx-auto px-4 lg:px-6 max-w-7xl">
+            <!-- Hero Section -->
+            <div class="text-center mb-16 animate-fade-in-up">
+                <h2 class="text-5xl md:text-7xl lg:text-8xl font-mono font-thin mb-6 gradient-text leading-tight">
+                    Advanced Hash Generator Pro
+                </h2>
+                <p class="text-gray-400 dark:text-gray-400 light:text-gray-600 text-lg md:text-xl font-mono max-w-3xl mx-auto leading-relaxed mb-8">
+                    Tạo, xác minh và phân tích mã hash với hơn 30 thuật toán mã hóa tiên tiến
+                </p>
+                <div class="flex flex-wrap justify-center gap-4 mb-8">
+                    <span class="px-4 py-2 bg-blue-500 bg-opacity-20 text-blue-300 dark:text-blue-300 light:text-blue-600 rounded-full text-sm font-mono hover-lift">30+ Algorithms</span>
+                    <span class="px-4 py-2 bg-green-500 bg-opacity-20 text-green-300 dark:text-green-300 light:text-green-600 rounded-full text-sm font-mono hover-lift">Batch Processing</span>
+                    <span class="px-4 py-2 bg-purple-500 bg-opacity-20 text-purple-300 dark:text-purple-300 light:text-purple-600 rounded-full text-sm font-mono hover-lift">File Upload</span>
+                    <span class="px-4 py-2 bg-yellow-500 bg-opacity-20 text-yellow-300 dark:text-yellow-300 light:text-yellow-600 rounded-full text-sm font-mono hover-lift">Performance Analysis</span>
+                </div>
+                <div class="section-divider mt-8 mb-4"></div>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="flex flex-wrap justify-center gap-2 mb-8" role="tablist" aria-label="Hash generator tabs">
+                <button class="tab-button active hover-lift focus-ring" data-tab="single" role="tab" aria-selected="true" aria-controls="singleTab">
+                    <i data-lucide="hash" class="w-4 h-4 inline mr-2"></i>
+                    Single Hash
+                </button>
+                <button class="tab-button hover-lift focus-ring" data-tab="batch" role="tab" aria-selected="false" aria-controls="batchTab">
+                    <i data-lucide="layers" class="w-4 h-4 inline mr-2"></i>
+                    Batch Processing
+                </button>
+                <button class="tab-button hover-lift focus-ring" data-tab="file" role="tab" aria-selected="false" aria-controls="fileTab">
+                    <i data-lucide="file-up" class="w-4 h-4 inline mr-2"></i>
+                    File Upload
+                </button>
+                <button class="tab-button hover-lift focus-ring" data-tab="compare" role="tab" aria-selected="false" aria-controls="compareTab">
+                    <i data-lucide="git-compare" class="w-4 h-4 inline mr-2"></i>
+                    Compare Hashes
+                </button>
+                <button class="tab-button hover-lift focus-ring" data-tab="benchmark" role="tab" aria-selected="false" aria-controls="benchmarkTab">
+                    <i data-lucide="activity" class="w-4 h-4 inline mr-2"></i>
+                    Benchmark
+                </button>
+            </div>
+
+            <!-- Single Hash Tab -->
+            <div id="singleTab" class="tab-content" role="tabpanel">
+                <div class="hash-card rounded-3xl p-8 lg:p-12 mb-12 animate-scale-in">
+                    <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 lg:gap-12">
+                        <!-- Input Section -->
+                        <div class="xl:col-span-1 space-y-8">
+                            <div class="space-y-4">
+                                <label for="inputText" class="block text-sm font-mono font-medium flex items-center space-x-3">
+                                    <i data-lucide="type" class="w-5 h-5"></i>
+                                    <span>Văn bản cần hash</span>
+                                </label>
+                                <textarea 
+                                    id="inputText" 
+                                    class="input-field w-full h-40 px-6 py-4 rounded-xl resize-none font-mono text-sm leading-relaxed focus-ring"
+                                    placeholder="Nhập văn bản cần tạo hash..."
+                                    aria-describedby="charCount"
+                                ></textarea>
+                                <div class="text-xs text-gray-500 dark:text-gray-500 light:text-gray-600 font-mono">
+                                    <span id="charCount" aria-live="polite">0</span> ký tự
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <label for="hashType" class="block text-sm font-mono font-medium flex items-center space-x-3">
+                                    <i data-lucide="settings" class="w-5 h-5"></i>
+                                    <span>Thuật toán</span>
+                                </label>
+                                <select id="hashType" class="input-field w-full px-6 py-4 rounded-xl font-mono text-sm focus-ring">
+                                    <optgroup label="🔹 Cơ bản">
+                                        <option value="md5">MD5</option>
+                                        <option value="sha1">SHA-1</option>
+                                        <option value="sha224">SHA-224</option>
+                                        <option value="sha256" selected>SHA-256</option>
+                                        <option value="sha384">SHA-384</option>
+                                        <option value="sha512">SHA-512</option>
+                                    </optgroup>
+                                    <optgroup label="🔸 SHA-3 Family">
+                                        <option value="sha3_224">SHA3-224</option>
+                                        <option value="sha3_256">SHA3-256</option>
+                                        <option value="sha3_384">SHA3-384</option>
+                                        <option value="sha3_512">SHA3-512</option>
+                                        <option value="shake_128">SHAKE-128</option>
+                                        <option value="shake_256">SHAKE-256</option>
+                                    </optgroup>
+                                    <optgroup label="🔷 BLAKE Family">
+                                        <option value="blake2b">BLAKE2b</option>
+                                        <option value="blake2s">BLAKE2s</option>
+                                    </optgroup>
+                                    <optgroup label="🔐 Password Hashing">
+                                        <option value="bcrypt">bcrypt</option>
+                                        <option value="argon2">Argon2</option>
+                                        <option value="scrypt">scrypt</option>
+                                        <option value="pbkdf2_sha256">PBKDF2-SHA256</option>
+                                        <option value="pbkdf2_sha512">PBKDF2-SHA512</option>
+                                    </optgroup>
+                                    <optgroup label="🔑 HMAC Family">
+                                        <option value="hmac_md5">HMAC-MD5</option>
+                                        <option value="hmac_sha1">HMAC-SHA1</option>
+                                        <option value="hmac_sha256">HMAC-SHA256</option>
+                                        <option value="hmac_sha512">HMAC-SHA512</option>
+                                    </optgroup>
+                                    <optgroup label="✅ Checksum">
+                                        <option value="crc32">CRC32</option>
+                                        <option value="adler32">Adler32</option>
+                                        <option value="simple_checksum">Simple Checksum</option>
+                                    </optgroup>
+                                    <optgroup label="⚡ Fast Hash">
+                                        <option value="fnv1">FNV-1</option>
+                                        <option value="fnv1a">FNV-1a</option>
+                                        <option value="djb2">DJB2</option>
+                                        <option value="sdbm">SDBM</option>
+                                    </optgroup>
+                                    <optgroup label="📝 Encoding">
+                                        <option value="base64">Base64</option>
+                                        <option value="base32">Base32</option>
+                                        <option value="base16">Base16</option>
+                                        <option value="base85">Base85</option>
+                                        <option value="url_safe_base64">URL-Safe Base64</option>
+                                    </optgroup>
+                                    <optgroup label="🎭 Classic">
+                                        <option value="rot13">ROT13</option>
+                                        <option value="hex">Hexadecimal</option>
+                                        <option value="ascii">ASCII Values</option>
+                                        <option value="binary">Binary</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+
+                            <div class="space-y-4">
+                                <label for="saltInput" class="block text-sm font-mono font-medium flex items-center space-x-3">
+                                    <i data-lucide="key" class="w-5 h-5"></i>
+                                    <span>Salt/Key (tùy chọn)</span>
+                                </label>
+                                <div class="flex space-x-2">
+                                    <input 
+                                        type="text" 
+                                        id="saltInput" 
+                                        class="input-field flex-1 px-6 py-4 rounded-xl font-mono text-sm focus-ring"
+                                        placeholder="Salt hoặc key..."
+                                    >
+                                    <button id="generateSaltBtn" class="btn-primary px-4 py-4 rounded-xl hover-lift focus-ring" aria-label="Generate random salt">
+                                        <i data-lucide="shuffle" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row gap-4">
+                                <button 
+                                    id="generateBtn" 
+                                    class="btn-primary flex-1 px-8 py-4 rounded-xl font-mono font-medium flex items-center justify-center space-x-3 hover-lift focus-ring"
+                                >
+                                    <i data-lucide="zap" class="w-5 h-5"></i>
+                                    <span>Tạo Hash</span>
+                                </button>
+                                <button 
+                                    id="clearBtn" 
+                                    class="btn-primary px-8 py-4 rounded-xl font-mono font-medium flex items-center justify-center space-x-3 hover-lift focus-ring"
+                                >
+                                    <i data-lucide="trash-2" class="w-5 h-5"></i>
+                                    <span>Xóa</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Result Section -->
+                        <div class="xl:col-span-2 space-y-8">
+                            <div class="space-y-4">
+                                <label class="block text-sm font-mono font-medium flex items-center space-x-3">
+                                    <i data-lucide="shield-check" class="w-5 h-5"></i>
+                                    <span>Kết quả Hash</span>
+                                </label>
+                                <div class="result-box rounded-xl p-6 min-h-48 relative">
+                                    <div id="hashResult" class="text-sm break-all text-gray-300 dark:text-gray-300 light:text-gray-600 leading-relaxed" aria-live="polite">
+                                        Kết quả sẽ hiển thị ở đây...
+                                    </div>
+                                    <div class="absolute top-4 right-4 flex space-x-2">
+                                        <button 
+                                            id="copyBtn" 
+                                            class="p-3 rounded-lg hover:bg-gray-700 dark:hover:bg-gray-700 light:hover:bg-gray-200 transition-all duration-300 hover-lift focus-ring"
+                                            style="display: none;"
+                                            aria-label="Copy hash to clipboard"
+                                        >
+                                            <i data-lucide="copy" class="w-5 h-5"></i>
+                                        </button>
+                                        <button 
+                                            id="qrBtn" 
+                                            class="p-3 rounded-lg hover:bg-gray-700 dark:hover:bg-gray-700 light:hover:bg-gray-200 transition-all duration-300 hover-lift focus-ring"
+                                            style="display: none;"
+                                            aria-label="Generate QR code"
+                                        >
+                                            <i data-lucide="qr-code" class="w-5 h-5"></i>
+                                        </button>
+                                        <button 
+                                            id="saveHistoryBtn" 
+                                            class="p-3 rounded-lg hover:bg-gray-700 dark:hover:bg-gray-700 light:hover:bg-gray-200 transition-all duration-300 hover-lift focus-ring"
+                                            style="display: none;"
+                                            aria-label="Save to history"
+                                        >
+                                            <i data-lucide="bookmark" class="w-5 h-5"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Hash Info & Strength Analysis -->
+                            <div id="hashInfo" class="space-y-4" style="display: none;">
+                                <div class="info-panel rounded-xl p-6 space-y-4">
+                                    <h4 class="font-mono font-medium text-sm flex items-center space-x-2">
+                                        <i data-lucide="info" class="w-4 h-4"></i>
+                                        <span>Thông tin Hash</span>
+                                    </h4>
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-mono text-gray-400 dark:text-gray-400 light:text-gray-600">
+                                        <div class="flex justify-between">
+                                            <span>Thuật toán:</span>
+                                            <span id="infoType" class="text-white dark:text-white light:text-gray-900 font-medium"></span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>Độ dài:</span>
+                                            <span id="infoLength" class="text-white dark:text-white light:text-gray-900 font-medium"></span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>Thời gian:</span>
+                                            <span id="infoTime" class="text-white dark:text-white light:text-gray-900 font-medium"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Hash Strength -->
+                                    <div id="strengthAnalysis" class="space-y-3">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm font-mono">Độ mạnh:</span>
+                                            <span id="strengthLevel" class="text-sm font-mono font-bold"></span>
+                                        </div>
+                                        <div class="strength-bar">
+                                            <div id="strengthFill" class="strength-fill" style="width: 0%"></div>
+                                        </div>
+                                        <div id="strengthRecommendations" class="text-xs text-gray-400 dark:text-gray-400 light:text-gray-600"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Hash Verification -->
+                            <div class="border-t border-gray-700 dark:border-gray-700 light:border-gray-300 pt-8">
+                                <div class="space-y-4">
+                                    <label for="verifyHash" class="block text-sm font-mono font-medium flex items-center space-x-3">
+                                        <i data-lucide="check-circle" class="w-5 h-5"></i>
+                                        <span>Xác minh Hash</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="verifyHash" 
+                                        class="input-field w-full px-6 py-4 rounded-xl font-mono text-sm focus-ring"
+                                        placeholder="Nhập hash cần xác minh..."
+                                    >
+                                    <button 
+                                        id="verifyBtn" 
+                                        class="btn-primary w-full px-8 py-4 rounded-xl font-mono font-medium flex items-center justify-center space-x-3 hover-lift focus-ring"
+                                    >
+                                        <i data-lucide="search" class="w-5 h-5"></i>
+                                        <span>Xác minh</span>
+                                    </button>
+                                    <div id="verifyResult" class="text-sm font-mono p-4 rounded-xl" style="display: none;" aria-live="polite"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Batch Processing Tab -->
+            <div id="batchTab" class="tab-content" style="display: none;" role="tabpanel">
+                <div class="hash-card rounded-3xl p-8 lg:p-12 mb-12">
+                    <div class="space-y-8">
+                        <div class="text-center">
+                            <h3 class="text-2xl font-mono font-bold mb-4 gradient-text">Batch Processing</h3>
+                            <p class="text-gray-400 dark:text-gray-400 light:text-gray-600 font-mono">Xử lý nhiều văn bản cùng lúc</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <div class="space-y-4">
+                                <label for="batchInput" class="block text-sm font-mono font-medium">
+                                    Danh sách văn bản (mỗi dòng một văn bản)
+                                </label>
+                                <textarea 
+                                    id="batchInput" 
+                                    class="input-field w-full h-64 px-6 py-4 rounded-xl resize-none font-mono text-sm focus-ring"
+                                    placeholder="text1&#10;text2&#10;text3&#10;..."
+                                ></textarea>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <label for="batchHashType" class="block text-sm font-mono font-medium">Thuật toán</label>
+                                <select id="batchHashType" class="input-field w-full px-6 py-4 rounded-xl font-mono text-sm focus-ring">
+                                    <option value="md5">MD5</option>
+                                    <option value="sha256" selected>SHA-256</option>
+                                    <option value="sha512">SHA-512</option>
+                                </select>
+                                
+                                <button 
+                                    id="batchProcessBtn" 
+                                    class="btn-primary w-full px-8 py-4 rounded-xl font-mono font-medium flex items-center justify-center space-x-3 hover-lift focus-ring"
+                                >
+                                    <i data-lucide="layers" class="w-5 h-5"></i>
+                                    <span>Xử lý Batch</span>
+                                </button>
+                                
+                                <div id="batchProgress" class="progress-bar" style="display: none;" role="progressbar" aria-label="Batch processing progress">
+                                    <div id="batchProgressFill" class="progress-fill" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="batchResults" class="space-y-4" style="display: none;">
+                            <div class="flex items-center justify-between">
+                                <h4 class="font-mono font-medium">Kết quả Batch</h4>
+                                <button id="exportBatchBtn" class="btn-primary px-4 py-2 rounded-lg text-sm hover-lift focus-ring">
+                                    <i data-lucide="download" class="w-4 h-4 inline mr-2"></i>
+                                    Export
+                                </button>
+                            </div>
+                            <div id="batchResultsList" class="space-y-2 max-h-96 overflow-y-auto"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- File Upload Tab -->
+            <div id="fileTab" class="tab-content" style="display: none;" role="tabpanel">
+                <div class="hash-card rounded-3xl p-8 lg:p-12 mb-12">
+                    <div class="space-y-8">
+                        <div class="text-center">
+                            <h3 class="text-2xl font-mono font-bold mb-4 gradient-text">File Hash Generator</h3>
+                            <p class="text-gray-400 dark:text-gray-400 light:text-gray-600 font-mono">Upload file và tạo hash</p>
+                        </div>
+                        
+                        <div class="drag-drop-zone" id="dropZone" role="button" tabindex="0" aria-label="Drop files here or click to select">
+                            <i data-lucide="upload-cloud" class="w-16 h-16 mx-auto mb-4 text-gray-400 dark:text-gray-400 light:text-gray-500"></i>
+                            <p class="text-lg font-mono mb-2">Kéo thả file vào đây</p>
+                            <p class="text-sm text-gray-400 dark:text-gray-400 light:text-gray-600 font-mono mb-4">hoặc click để chọn file</p>
+                            <input type="file" id="fileInput" class="hidden" multiple accept="*/*">
+                            <button id="selectFileBtn" class="btn-primary px-6 py-3 rounded-xl font-mono hover-lift focus-ring">
+                                Chọn File
+                            </button>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <label for="fileHashType" class="block text-sm font-mono font-medium">Thuật toán Hash</label>
+                                <select id="fileHashType" class="input-field w-full px-6 py-4 rounded-xl font-mono text-sm focus-ring">
+                                    <option value="md5">MD5</option>
+                                    <option value="sha1">SHA-1</option>
+                                    <option value="sha256" selected>SHA-256</option>
+                                    <option value="sha512">SHA-512</option>
+                                </select>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <label class="block text-sm font-mono font-medium">Trạng thái</label>
+                                <div id="fileStatus" class="input-field px-6 py-4 rounded-xl font-mono text-sm text-gray-400 dark:text-gray-400 light:text-gray-600">
+                                    Chưa chọn file
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="fileResults" class="space-y-4" style="display: none;">
+                            <h4 class="font-mono font-medium">Kết quả File Hash</h4>
+                            <div id="fileResultsList" class="space-y-4"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Compare Hashes Tab -->
+            <div id="compareTab" class="tab-content" style="display: none;" role="tabpanel">
+                <div class="hash-card rounded-3xl p-8 lg:p-12 mb-12">
+                    <div class="space-y-8">
+                        <div class="text-center">
+                            <h3 class="text-2xl font-mono font-bold mb-4 gradient-text">Hash Comparison</h3>
+                            <p class="text-gray-400 dark:text-gray-400 light:text-gray-600 font-mono">So sánh và phân tích sự khác biệt giữa các hash</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <div class="space-y-4">
+                                <label for="compareHash1" class="block text-sm font-mono font-medium">Hash 1</label>
+                                <textarea 
+                                    id="compareHash1" 
+                                    class="input-field w-full h-32 px-6 py-4 rounded-xl resize-none font-mono text-sm focus-ring"
+                                    placeholder="Nhập hash đầu tiên..."
+                                ></textarea>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <label for="compareHash2" class="block text-sm font-mono font-medium">Hash 2</label>
+                                <textarea 
+                                    id="compareHash2" 
+                                    class="input-field w-full h-32 px-6 py-4 rounded-xl resize-none font-mono text-sm focus-ring"
+                                    placeholder="Nhập hash thứ hai..."
+                                ></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <button 
+                                id="compareBtn" 
+                                class="btn-primary px-8 py-4 rounded-xl font-mono font-medium flex items-center justify-center space-x-3 mx-auto hover-lift focus-ring"
+                            >
+                                <i data-lucide="git-compare" class="w-5 h-5"></i>
+                                <span>So sánh Hash</span>
+                            </button>
+                        </div>
+                        
+                        <div id="compareResults" class="space-y-6" style="display: none;">
+                            <div class="info-panel rounded-xl p-6">
+                                <h4 class="font-mono font-medium mb-4">Kết quả So sánh</h4>
+                                <div id="compareStatus" class="text-lg font-mono mb-4" aria-live="polite"></div>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm font-mono">
+                                    <div>
+                                        <span class="text-gray-400 dark:text-gray-400 light:text-gray-600">Hash 1 Length:</span>
+                                        <span id="hash1Length" class="text-white dark:text-white light:text-gray-900 ml-2 font-medium"></span>
+                                    </div>
+                                    <div>
+                                        <span class="text-gray-400 dark:text-gray-400 light:text-gray-600">Hash 2 Length:</span>
+                                        <span id="hash2Length" class="text-white dark:text-white light:text-gray-900 ml-2 font-medium"></span>
+                                    </div>
+                                    <div>
+                                        <span class="text-gray-400 dark:text-gray-400 light:text-gray-600">Differences:</span>
+                                        <span id="totalDifferences" class="text-white dark:text-white light:text-gray-900 ml-2 font-medium"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div id="differencesList" class="space-y-2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Benchmark Tab -->
+            <div id="benchmarkTab" class="tab-content" style="display: none;" role="tabpanel">
+                <div class="hash-card rounded-3xl p-8 lg:p-12 mb-12">
+                    <div class="space-y-8">
+                        <div class="text-center">
+                            <h3 class="text-2xl font-mono font-bold mb-4 gradient-text">Performance Benchmark</h3>
+                            <p class="text-gray-400 dark:text-gray-400 light:text-gray-600 font-mono">Đo hiệu suất của các thuật toán hash</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <div class="space-y-4">
+                                <label for="benchmarkText" class="block text-sm font-mono font-medium">Văn bản test</label>
+                                <textarea 
+                                    id="benchmarkText" 
+                                    class="input-field w-full h-32 px-6 py-4 rounded-xl resize-none font-mono text-sm focus-ring"
+                                    placeholder="Nhập văn bản để benchmark..."
+                                >This is a benchmark test for hash algorithms performance analysis</textarea>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <label class="block text-sm font-mono font-medium">Thuật toán</label>
+                                <div class="space-y-2">
+                                    <label class="flex items-center space-x-2 cursor-pointer">
+                                        <input type="checkbox" class="benchmark-algo focus-ring" value="md5" checked>
+                                        <span class="font-mono text-sm">MD5</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2 cursor-pointer">
+                                        <input type="checkbox" class="benchmark-algo focus-ring" value="sha256" checked>
+                                        <span class="font-mono text-sm">SHA-256</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2 cursor-pointer">
+                                        <input type="checkbox" class="benchmark-algo focus-ring" value="sha512" checked>
+                                        <span class="font-mono text-sm">SHA-512</span>
+                                    </label>
+                                </div>
+                                
+                                <button 
+                                    id="runBenchmarkBtn" 
+                                    class="btn-primary w-full px-8 py-4 rounded-xl font-mono font-medium flex items-center justify-center space-x-3 hover-lift focus-ring"
+                                >
+                                    <i data-lucide="activity" class="w-5 h-5"></i>
+                                    <span>Chạy Benchmark</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="benchmarkResults" class="space-y-4" style="display: none;">
+                            <h4 class="font-mono font-medium">Kết quả Benchmark</h4>
+                            <div id="benchmarkChart" class="info-panel rounded-xl p-6">
+                                <div id="benchmarkList" class="space-y-4"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Algorithm Categories -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <div class="category-card rounded-2xl p-6 animate-fade-in-up hover-lift" style="animation-delay: 0.1s">
+                    <div class="flex items-center mb-4">
+                        <i data-lucide="shield" class="w-8 h-8 mr-4 text-blue-400"></i>
+                        <h3 class="font-mono font-bold text-lg">Cơ bản</h3>
+                    </div>
+                    <p class="text-sm text-gray-400 dark:text-gray-400 light:text-gray-600 font-mono leading-relaxed">MD5, SHA-1, SHA-256, SHA-512 - Phù hợp cho checksum và xác minh dữ liệu</p>
+                </div>
+
+                <div class="category-card rounded-2xl p-6 animate-fade-in-up hover-lift" style="animation-delay: 0.2s">
+                    <div class="flex items-center mb-4">
+                        <i data-lucide="lock" class="w-8 h-8 mr-4 text-green-400"></i>
+                        <h3 class="font-mono font-bold text-lg">Bảo mật cao</h3>
+                    </div>
+                    <p class="text-sm text-gray-400 dark:text-gray-400 light:text-gray-600 font-mono leading-relaxed">bcrypt, Argon2, scrypt - Tối ưu cho lưu trữ mật khẩu an toàn</p>
+                </div>
+
+                <div class="category-card rounded-2xl p-6 animate-fade-in-up hover-lift" style="animation-delay: 0.3s">
+                    <div class="flex items-center mb-4">
+                        <i data-lucide="cpu" class="w-8 h-8 mr-4 text-purple-400"></i>
+                        <h3 class="font-mono font-bold text-lg">Hiện đại</h3>
+                    </div>
+                    <p class="text-sm text-gray-400 dark:text-gray-400 light:text-gray-600 font-mono leading-relaxed">SHA-3, BLAKE2 - Thuật toán mới nhất với hiệu suất cao</p>
+                </div>
+
+                <div class="category-card rounded-2xl p-6 animate-fade-in-up hover-lift" style="animation-delay: 0.4s">
+                    <div class="flex items-center mb-4">
+                        <i data-lucide="zap" class="w-8 h-8 mr-4 text-yellow-400"></i>
+                        <h3 class="font-mono font-bold text-lg">Tốc độ cao</h3>
+                    </div>
+                    <p class="text-sm text-gray-400 dark:text-gray-400 light:text-gray-600 font-mono leading-relaxed">FNV, DJB2, CRC32 - Xử lý nhanh cho ứng dụng real-time</p>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="hash-card rounded-2xl p-8 text-center animate-fade-in-up">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                    <div>
+                        <div class="text-3xl font-mono font-bold gradient-text mb-2">30+</div>
+                        <div class="text-sm text-gray-400 dark:text-gray-400 light:text-gray-600 font-mono">Thuật toán</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-mono font-bold gradient-text mb-2">5</div>
+                        <div class="text-sm text-gray-400 dark:text-gray-400 light:text-gray-600 font-mono">Chế độ</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-mono font-bold gradient-text mb-2">100%</div>
+                        <div class="text-sm text-gray-400 dark:text-gray-400 light:text-gray-600 font-mono">Bảo mật</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-mono font-bold gradient-text mb-2">∞</div>
+                        <div class="text-sm text-gray-400 dark:text-gray-400 light:text-gray-600 font-mono">Sử dụng</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <!-- QR Code Modal -->
+    <div id="qrModal" class="modal-overlay" role="dialog" aria-labelledby="qrModalTitle" aria-hidden="true">
+        <div class="modal-content">
+            <div class="flex items-center justify-between mb-6">
+                <h3 id="qrModalTitle" class="text-xl font-mono font-bold">QR Code</h3>
+                <button id="closeQrModal" class="p-2 rounded-lg hover:bg-gray-700 dark:hover:bg-gray-700 light:hover:bg-gray-200 focus-ring" aria-label="Close QR modal">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="text-center">
+                <div id="qrCodeContainer" class="mx-auto mb-4 p-4 bg-white rounded-lg inline-block"></div>
+                <p class="text-sm text-gray-400 dark:text-gray-400 light:text-gray-600 font-mono">Scan QR code để copy hash</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shortcuts Modal -->
+    <div id="shortcutsModal" class="modal-overlay" role="dialog" aria-labelledby="shortcutsModalTitle" aria-hidden="true">
+        <div class="modal-content">
+            <div class="flex items-center justify-between mb-6">
+                <h3 id="shortcutsModalTitle" class="text-xl font-mono font-bold">Keyboard Shortcuts</h3>
+                <button id="closeShortcutsModal" class="p-2 rounded-lg hover:bg-gray-700 dark:hover:bg-gray-700 light:hover:bg-gray-200 focus-ring" aria-label="Close shortcuts modal">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="space-y-4 font-mono text-sm">
+                <div class="flex justify-between items-center">
+                    <span>Generate Hash</span>
+                    <kbd class="bg-gray-700 dark:bg-gray-700 light:bg-gray-200 dark:text-white light:text-gray-900 px-2 py-1 rounded text-xs">Ctrl + Enter</kbd>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span>Clear All</span>
+                    <kbd class="bg-gray-700 dark:bg-gray-700 light:bg-gray-200 dark:text-white light:text-gray-900 px-2 py-1 rounded text-xs">Ctrl + Delete</kbd>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span>Copy Result</span>
+                    <kbd class="bg-gray-700 dark:bg-gray-700 light:bg-gray-200 dark:text-white light:text-gray-900 px-2 py-1 rounded text-xs">Ctrl + C</kbd>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span>Toggle Theme</span>
+                    <kbd class="bg-gray-700 dark:bg-gray-700 light:bg-gray-200 dark:text-white light:text-gray-900 px-2 py-1 rounded text-xs">Ctrl + T</kbd>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span>Focus Input</span>
+                    <kbd class="bg-gray-700 dark:bg-gray-700 light:bg-gray-200 dark:text-white light:text-gray-900 px-2 py-1 rounded text-xs">Ctrl + I</kbd>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span>Show Shortcuts</span>
+                    <kbd class="bg-gray-700 dark:bg-gray-700 light:bg-gray-200 dark:text-white light:text-gray-900 px-2 py-1 rounded text-xs">Ctrl + ?</kbd>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Global variables
+        let currentTheme = localStorage.getItem('theme') || 'dark';
+        let hashHistory = [];
+        let currentHash = '';
+        let isProcessing = false;
+
+        // DOM elements
+        const body = document.body;
+        const html = document.documentElement;
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        
+        // Single hash elements
+        const inputText = document.getElementById('inputText');
+        const hashType = document.getElementById('hashType');
+        const saltInput = document.getElementById('saltInput');
+        const generateBtn = document.getElementById('generateBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const hashResult = document.getElementById('hashResult');
+        const copyBtn = document.getElementById('copyBtn');
+        const qrBtn = document.getElementById('qrBtn');
+        const saveHistoryBtn = document.getElementById('saveHistoryBtn');
+        const hashInfo = document.getElementById('hashInfo');
+        const verifyHash = document.getElementById('verifyHash');
+        const verifyBtn = document.getElementById('verifyBtn');
+        const verifyResult = document.getElementById('verifyResult');
+        const charCount = document.getElementById('charCount');
+        const generateSaltBtn = document.getElementById('generateSaltBtn');
+
+        // Tab elements
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        // Batch processing elements
+        const batchInput = document.getElementById('batchInput');
+        const batchHashType = document.getElementById('batchHashType');
+        const batchProcessBtn = document.getElementById('batchProcessBtn');
+        const batchProgress = document.getElementById('batchProgress');
+        const batchProgressFill = document.getElementById('batchProgressFill');
+        const batchResults = document.getElementById('batchResults');
+        const batchResultsList = document.getElementById('batchResultsList');
+        const exportBatchBtn = document.getElementById('exportBatchBtn');
+
+        // File upload elements
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const selectFileBtn = document.getElementById('selectFileBtn');
+        const fileHashType = document.getElementById('fileHashType');
+        const fileStatus = document.getElementById('fileStatus');
+        const fileResults = document.getElementById('fileResults');
+        const fileResultsList = document.getElementById('fileResultsList');
+
+        // Compare elements
+        const compareHash1 = document.getElementById('compareHash1');
+        const compareHash2 = document.getElementById('compareHash2');
+        const compareBtn = document.getElementById('compareBtn');
+        const compareResults = document.getElementById('compareResults');
+
+        // Benchmark elements
+        const benchmarkText = document.getElementById('benchmarkText');
+        const runBenchmarkBtn = document.getElementById('runBenchmarkBtn');
+        const benchmarkResults = document.getElementById('benchmarkResults');
+        const benchmarkList = document.getElementById('benchmarkList');
+
+        // Modal elements
+        const qrModal = document.getElementById('qrModal');
+        const shortcutsModal = document.getElementById('shortcutsModal');
+        const shortcutsBtn = document.getElementById('shortcutsBtn');
+        const qrCodeContainer = document.getElementById('qrCodeContainer');
+
+        // Initialize theme
+        function initTheme() {
+            if (currentTheme === 'light') {
+                body.classList.remove('bg-dark', 'text-white');
+                body.classList.add('bg-light-bg', 'text-light-text', 'light');
+                html.classList.add('light');
+                themeToggle.classList.add('active');
+                themeIcon.setAttribute('data-lucide', 'sun');
+            } else {
+                body.classList.remove('bg-light-bg', 'text-light-text', 'light');
+                body.classList.add('bg-dark', 'text-white');
+                html.classList.remove('light');
+                themeToggle.classList.remove('active');
+                themeIcon.setAttribute('data-lucide', 'moon');
+            }
+            lucide.createIcons();
+        }
+
+        // Theme toggle functionality
+        themeToggle.addEventListener('click', toggleTheme);
+        themeToggle.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleTheme();
+            }
+        });
+
+        function toggleTheme() {
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', currentTheme);
+            initTheme();
+            showNotification(`Đã chuyển sang chế độ ${currentTheme === 'light' ? 'sáng' : 'tối'}`, 'info');
+        }
+
+        // Tab functionality
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabName = button.getAttribute('data-tab');
+                switchTab(tabName);
+            });
+            
+            button.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    const tabName = button.getAttribute('data-tab');
+                    switchTab(tabName);
+                }
+            });
+        });
+
+        function switchTab(tabName) {
+            // Update tab buttons
+            tabButtons.forEach(btn => {
+                btn.classList.remove('active');
+                btn.setAttribute('aria-selected', 'false');
+            });
+            const activeTab = document.querySelector(`[data-tab="${tabName}"]`);
+            activeTab.classList.add('active');
+            activeTab.setAttribute('aria-selected', 'true');
+            
+            // Update tab contents
+            tabContents.forEach(content => content.style.display = 'none');
+            document.getElementById(`${tabName}Tab`).style.display = 'block';
+        }
+
+        // Character counter
+        inputText.addEventListener('input', () => {
+            charCount.textContent = inputText.value.length;
+            // Auto-resize textarea
+            inputText.style.height = 'auto';
+            inputText.style.height = Math.min(inputText.scrollHeight, 200) + 'px';
+        });
+
+        // Generate salt
+        generateSaltBtn.addEventListener('click', () => {
+            const salt = Array.from(crypto.getRandomValues(new Uint8Array(16)))
+                .map(b => b.toString(16).padStart(2, '0'))
+                .join('');
+            saltInput.value = salt;
+            showNotification('Đã tạo salt ngẫu nhiên', 'success');
+        });
+
+        // Generate hash
+        generateBtn.addEventListener('click', generateHash);
+
+        async function generateHash() {
+            const text = inputText.value.trim();
+            if (!text) {
+                showNotification('Vui lòng nhập văn bản cần hash', 'error');
+                inputText.focus();
+                return;
+            }
+
+            if (isProcessing) return;
+            isProcessing = true;
+
+            const originalContent = generateBtn.innerHTML;
+            generateBtn.innerHTML = '<div class="loading-spinner"></div><span>Đang tạo...</span>';
+            generateBtn.disabled = true;
+
+            try {
+                const response = await fetch('/generate_hash', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        text: text,
+                        hash_type: hashType.value,
+                        salt: saltInput.value,
+                        iterations: 10000
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                // Display result with animation
+                currentHash = data.hash;
+                hashResult.textContent = data.hash;
+                hashResult.className = 'text-sm break-all text-green-300 dark:text-green-300 light:text-green-600 leading-relaxed animate-fade-in-up';
+                
+                // Show action buttons
+                copyBtn.style.display = 'block';
+                qrBtn.style.display = 'block';
+                saveHistoryBtn.style.display = 'block';
+                hashInfo.style.display = 'block';
+
+                // Update info
+                document.getElementById('infoType').textContent = data.type.toUpperCase();
+                document.getElementById('infoLength').textContent = data.length + ' ký tự';
+                document.getElementById('infoTime').textContent = data.processing_time + 'ms';
+
+                // Update strength analysis
+                if (data.strength) {
+                    updateStrengthAnalysis(data.strength);
+                }
+
+                showNotification('Hash được tạo thành công!', 'success');
+
+            } catch (error) {
+                hashResult.textContent = 'Lỗi: ' + error.message;
+                hashResult.className = 'text-sm break-all text-red-400 dark:text-red-400 light:text-red-600 leading-relaxed';
+                showNotification('Có lỗi xảy ra: ' + error.message, 'error');
+            }
+
+            generateBtn.innerHTML = originalContent;
+            generateBtn.disabled = false;
+            isProcessing = false;
+            lucide.createIcons();
+        }
+
+        function updateStrengthAnalysis(strength) {
+            const strengthLevel = document.getElementById('strengthLevel');
+            const strengthFill = document.getElementById('strengthFill');
+            const strengthRecommendations = document.getElementById('strengthRecommendations');
+            
+            strengthLevel.textContent = strength.level;
+            strengthFill.style.width = strength.score + '%';
+            
+            // Update strength bar color
+            strengthFill.className = 'strength-fill ';
+            if (strength.score >= 80) {
+                strengthFill.classList.add('strength-very-strong');
+                strengthLevel.className = 'text-sm font-mono font-bold text-cyan-400';
+            } else if (strength.score >= 60) {
+                strengthFill.classList.add('strength-strong');
+                strengthLevel.className = 'text-sm font-mono font-bold text-green-400';
+            } else if (strength.score >= 40) {
+                strengthFill.classList.add('strength-medium');
+                strengthLevel.className = 'text-sm font-mono font-bold text-yellow-400';
+            } else {
+                strengthFill.classList.add('strength-weak');
+                strengthLevel.className = 'text-sm font-mono font-bold text-red-400';
+            }
+            
+            // Show recommendations
+            if (strength.recommendations && strength.recommendations.length > 0) {
+                strengthRecommendations.innerHTML = strength.recommendations.map(rec => 
+                    `<div>• ${rec}</div>`
+                ).join('');
+            } else {
+                strengthRecommendations.innerHTML = '<div>• Hash strength is acceptable</div>';
+            }
+        }
+
+        // Copy to clipboard
+        copyBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(hashResult.textContent);
+                const originalContent = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<i data-lucide="check" class="w-5 h-5"></i>';
+                copyBtn.className = 'p-3 rounded-lg bg-green-600 text-white transition-all duration-300 hover-lift';
+                showNotification('Đã sao chép vào clipboard!', 'success');
+                
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalContent;
+                    copyBtn.className = 'p-3 rounded-lg hover:bg-gray-700 dark:hover:bg-gray-700 light:hover:bg-gray-200 transition-all duration-300 hover-lift focus-ring';
+                    lucide.createIcons();
+                }, 2000);
+            } catch (error) {
+                showNotification('Không thể sao chép', 'error');
+            }
+        });
+
+        // QR Code generation (client-side)
+        qrBtn.addEventListener('click', () => {
+            if (currentHash) {
+                generateQRCode(currentHash);
+                qrModal.classList.add('active');
+                qrModal.setAttribute('aria-hidden', 'false');
+            }
+        });
+
+        function generateQRCode(text) {
+            // Clear previous QR code
+            qrCodeContainer.innerHTML = '';
+            
+            // Show loading message
+            qrCodeContainer.innerHTML = `
+                <div class="text-blue-400 p-4 text-center">
+                    <div class="loading-spinner mx-auto mb-2"></div>
+                    <p>Đang tạo QR code...</p>
+                </div>
+            `;
+            
+            // Try different methods to generate QR code
+            if (typeof QRCode !== 'undefined' && QRCode.toCanvas) {
+                // Method 1: Using qrcode.js library
+                try {
+                    QRCode.toCanvas(qrCodeContainer, text, {
+                        width: 256,
+                        height: 256,
+                        margin: 2,
+                        color: {
+                            dark: '#000000',
+                            light: '#FFFFFF'
+                        },
+                        errorCorrectionLevel: 'M'
+                    }, function (error) {
+                        if (error) {
+                            console.error('QR Code generation error:', error);
+                            fallbackQRGeneration(text);
+                        }
+                    });
+                    return;
+                } catch (error) {
+                    console.error('QRCode library error:', error);
+                    fallbackQRGeneration(text);
+                    return;
+                }
+            }
+            
+            // Method 2: Fallback to online QR generator
+            fallbackQRGeneration(text);
+        }
+        
+        function fallbackQRGeneration(text) {
+            // Clear container
+            qrCodeContainer.innerHTML = '';
+            
+            try {
+                // Method 1: Try QR Server API
+                const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${encodeURIComponent(text)}`;
+                
+                const img = document.createElement('img');
+                img.src = qrUrl;
+                img.alt = 'QR Code';
+                img.className = 'mx-auto rounded-lg';
+                img.style.width = '256px';
+                img.style.height = '256px';
+                
+                img.onload = function() {
+                    qrCodeContainer.innerHTML = '';
+                    qrCodeContainer.appendChild(img);
+                };
+                
+                img.onerror = function() {
+                    // Method 2: Try alternative QR API
+                    const altQrUrl = `https://chart.googleapis.com/chart?chs=256x256&cht=qr&chl=${encodeURIComponent(text)}`;
+                    
+                    const altImg = document.createElement('img');
+                    altImg.src = altQrUrl;
+                    altImg.alt = 'QR Code';
+                    altImg.className = 'mx-auto rounded-lg';
+                    altImg.style.width = '256px';
+                    altImg.style.height = '256px';
+                    
+                    altImg.onload = function() {
+                        qrCodeContainer.innerHTML = '';
+                        qrCodeContainer.appendChild(altImg);
+                    };
+                    
+                    altImg.onerror = function() {
+                        // Final fallback: Show hash as text with copy button
+                        qrCodeContainer.innerHTML = `
+                            <div class="text-yellow-400 p-4 text-center max-w-sm">
+                                <i data-lucide="wifi-off" class="w-8 h-8 mx-auto mb-3"></i>
+                                <p class="mb-3">Không thể tạo QR code</p>
+                                <div class="bg-black p-3 rounded text-white font-mono text-xs break-all mb-3">${text}</div>
+                                <button onclick="navigator.clipboard.writeText('${text.replace(/'/g, "\\'")}').then(() => showNotification('Đã sao chép!', 'success'))" 
+                                        class="btn-primary px-4 py-2 rounded-lg text-sm">
+                                    <i data-lucide="copy" class="w-4 h-4 inline mr-2"></i>
+                                    Sao chép Hash
+                                </button>
+                            </div>
+                        `;
+                        lucide.createIcons();
+                    };
+                    
+                    qrCodeContainer.appendChild(altImg);
+                };
+                
+                qrCodeContainer.appendChild(img);
+                
+            } catch (error) {
+                console.error('Fallback QR generation error:', error);
+                qrCodeContainer.innerHTML = `
+                    <div class="text-red-400 p-4 text-center">
+                        <i data-lucide="x-circle" class="w-8 h-8 mx-auto mb-2"></i>
+                        <p>Không thể tạo QR code</p>
+                        <p class="text-sm mt-2">Vui lòng kiểm tra kết nối mạng</p>
+                        <button onclick="generateQRCode('${text.replace(/'/g, "\\'")}');" 
+                                class="btn-primary px-4 py-2 rounded-lg text-sm mt-3">
+                            Thử lại
+                        </button>
+                    </div>
+                `;
+                lucide.createIcons();
+            }
+        }
+
+        // Save to history
+        saveHistoryBtn.addEventListener('click', () => {
+            if (currentHash) {
+                const historyItem = {
+                    hash: currentHash,
+                    original: inputText.value,
+                    type: hashType.value,
+                    timestamp: new Date().toISOString(),
+                    id: Date.now()
+                };
+                hashHistory.unshift(historyItem); // Add to beginning
+                if (hashHistory.length > 100) { // Limit history to 100 items
+                    hashHistory = hashHistory.slice(0, 100);
+                }
+                localStorage.setItem('hashHistory', JSON.stringify(hashHistory));
+                showNotification('Đã lưu vào lịch sử!', 'success');
+            }
+        });
+
+        // Clear all
+        clearBtn.addEventListener('click', () => {
+            inputText.value = '';
+            saltInput.value = '';
+            verifyHash.value = '';
+            hashResult.textContent = 'Kết quả sẽ hiển thị ở đây...';
+            hashResult.className = 'text-sm break-all text-gray-300 dark:text-gray-300 light:text-gray-600 leading-relaxed';
+            copyBtn.style.display = 'none';
+            qrBtn.style.display = 'none';
+            saveHistoryBtn.style.display = 'none';
+            hashInfo.style.display = 'none';
+            verifyResult.style.display = 'none';
+            charCount.textContent = '0';
+            currentHash = '';
+            inputText.style.height = 'auto';
+            showNotification('Đã xóa tất cả dữ liệu', 'info');
+        });
+
+        // Verify hash
+        verifyBtn.addEventListener('click', async () => {
+            const text = inputText.value.trim();
+            const hash = verifyHash.value.trim();
+            
+            if (!text || !hash) {
+                showNotification('Vui lòng nhập cả văn bản và hash cần xác minh', 'error');
+                return;
+            }
+
+            if (!['bcrypt', 'argon2'].includes(hashType.value)) {
+                verifyResult.innerHTML = '<span class="text-yellow-400">⚠️ Xác minh chỉ hỗ trợ bcrypt và Argon2</span>';
+                verifyResult.className = 'text-sm font-mono p-4 rounded-xl bg-yellow-900 bg-opacity-20 border border-yellow-600';
+                verifyResult.style.display = 'block';
+                return;
+            }
+
+            const originalContent = verifyBtn.innerHTML;
+            verifyBtn.innerHTML = '<div class="loading-spinner"></div><span>Đang xác minh...</span>';
+            verifyBtn.disabled = true;
+
+            try {
+                const response = await fetch('/verify_hash', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        text: text,
+                        hash: hash,
+                        hash_type: hashType.value
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                if (data.valid) {
+                    verifyResult.innerHTML = '<span class="text-green-400">✅ Hash hợp lệ</span>';
+                    verifyResult.className = 'text-sm font-mono p-4 rounded-xl bg-green-900 bg-opacity-20 border border-green-600';
+                    showNotification('Hash hợp lệ!', 'success');
+                } else {
+                    verifyResult.innerHTML = '<span class="text-red-400">❌ Hash không hợp lệ</span>';
+                    verifyResult.className = 'text-sm font-mono p-4 rounded-xl bg-red-900 bg-opacity-20 border border-red-600';
+                    showNotification('Hash không hợp lệ!', 'error');
+                }
+                verifyResult.style.display = 'block';
+
+            } catch (error) {
+                verifyResult.innerHTML = '<span class="text-red-400">❌ Lỗi: ' + error.message + '</span>';
+                verifyResult.className = 'text-sm font-mono p-4 rounded-xl bg-red-900 bg-opacity-20 border border-red-600';
+                verifyResult.style.display = 'block';
+                showNotification('Lỗi xác minh: ' + error.message, 'error');
+            }
+
+            verifyBtn.innerHTML = originalContent;
+            verifyBtn.disabled = false;
+            lucide.createIcons();
+        });
+
+        // Batch processing
+        batchProcessBtn.addEventListener('click', async () => {
+            const texts = batchInput.value.split('\n').filter(t => t.trim());
+            if (texts.length === 0) {
+                showNotification('Vui lòng nhập danh sách văn bản', 'error');
+                batchInput.focus();
+                return;
+            }
+
+            const originalContent = batchProcessBtn.innerHTML;
+            batchProcessBtn.innerHTML = '<div class="loading-spinner"></div><span>Đang xử lý...</span>';
+            batchProcessBtn.disabled = true;
+            batchProgress.style.display = 'block';
+
+            try {
+                const response = await fetch('/batch_hash', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        texts: texts,
+                        hash_type: batchHashType.value
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                // Animate progress
+                batchProgressFill.style.width = '100%';
+                
+                // Display results
+                displayBatchResults(data.results);
+                batchResults.style.display = 'block';
+                showNotification(`Đã xử lý ${data.total_processed} văn bản trong ${data.total_time}ms`, 'success');
+
+            } catch (error) {
+                showNotification('Lỗi batch processing: ' + error.message, 'error');
+            }
+
+            batchProcessBtn.innerHTML = originalContent;
+            batchProcessBtn.disabled = false;
+            batchProgress.style.display = 'none';
+            batchProgressFill.style.width = '0%';
+            lucide.createIcons();
+        });
+
+        function displayBatchResults(results) {
+            batchResultsList.innerHTML = '';
+            results.forEach((result, index) => {
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'info-panel rounded-lg p-4 space-y-2 animate-fade-in-up hover-lift';
+                resultDiv.style.animationDelay = `${index * 0.1}s`;
+                resultDiv.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <span class="font-mono text-sm text-gray-400 dark:text-gray-400 light:text-gray-600">#${result.index}</span>
+                        <button class="copy-batch-btn p-1 rounded hover:bg-gray-700 dark:hover:bg-gray-700 light:hover:bg-gray-200 focus-ring" data-hash="${result.hash}" aria-label="Copy hash">
+                            <i data-lucide="copy" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <div class="font-mono text-xs text-gray-300 dark:text-gray-300 light:text-gray-700 break-all">${result.original}</div>
+                    <div class="font-mono text-xs text-green-300 dark:text-green-300 light:text-green-600 break-all">${result.hash}</div>
+                `;
+                batchResultsList.appendChild(resultDiv);
+            });
+            
+            // Add copy functionality to batch results
+            document.querySelectorAll('.copy-batch-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    const hash = e.currentTarget.getAttribute('data-hash');
+                    try {
+                        await navigator.clipboard.writeText(hash);
+                        const originalContent = e.currentTarget.innerHTML;
+                        e.currentTarget.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i>';
+                        setTimeout(() => {
+                            e.currentTarget.innerHTML = originalContent;
+                            lucide.createIcons();
+                        }, 2000);
+                        showNotification('Đã sao chép hash', 'success');
+                    } catch (error) {
+                        showNotification('Không thể sao chép', 'error');
+                    }
+                });
+            });
+            
+            lucide.createIcons();
+        }
+
+        // File upload functionality
+        selectFileBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', handleFileSelect);
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            handleFiles(files);
+        });
+
+        dropZone.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                fileInput.click();
+            }
+        });
+
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            handleFiles(files);
+        }
+
+        async function handleFiles(files) {
+            if (files.length === 0) return;
+
+            fileStatus.textContent = `Đã chọn ${files.length} file(s)`;
+            fileResults.style.display = 'block';
+            fileResultsList.innerHTML = '';
+
+            for (let i = 0; i < files.length; i++) {
+                await processFile(files[i], i);
+            }
+        }
+
+        async function processFile(file, index) {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('hash_type', fileHashType.value);
+
+            try {
+                const response = await fetch('/upload_file', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                // Display file result
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'info-panel rounded-lg p-4 space-y-2 animate-fade-in-up hover-lift';
+                resultDiv.style.animationDelay = `${index * 0.1}s`;
+                resultDiv.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <span class="font-mono text-sm font-bold truncate flex-1 mr-2">${data.filename}</span>
+                        <button class="copy-file-btn p-1 rounded hover:bg-gray-700 dark:hover:bg-gray-700 light:hover:bg-gray-200 focus-ring" data-hash="${data.hash}" aria-label="Copy file hash">
+                            <i data-lucide="copy" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <div class="text-xs text-gray-400 dark:text-gray-400 light:text-gray-600 font-mono">
+                        Size: ${formatFileSize(data.size)} | Type: ${data.type.toUpperCase()} | Time: ${data.processing_time}ms
+                    </div>
+                    <div class="font-mono text-xs text-green-300 dark:text-green-300 light:text-green-600 break-all">${data.hash}</div>
+                `;
+                fileResultsList.appendChild(resultDiv);
+
+                // Add copy functionality
+                const copyBtn = resultDiv.querySelector('.copy-file-btn');
+                copyBtn.addEventListener('click', async (e) => {
+                    const hash = e.currentTarget.getAttribute('data-hash');
+                    try {
+                        await navigator.clipboard.writeText(hash);
+                        const originalContent = e.currentTarget.innerHTML;
+                        e.currentTarget.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i>';
+                        setTimeout(() => {
+                            e.currentTarget.innerHTML = originalContent;
+                            lucide.createIcons();
+                        }, 2000);
+                        showNotification('Đã sao chép file hash', 'success');
+                    } catch (error) {
+                        showNotification('Không thể sao chép', 'error');
+                    }
+                });
+
+            } catch (error) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'bg-red-900 bg-opacity-20 border border-red-600 rounded-lg p-4 animate-fade-in-up';
+                errorDiv.style.animationDelay = `${index * 0.1}s`;
+                errorDiv.innerHTML = `
+                    <div class="font-mono text-sm font-bold text-red-300">${file.name}</div>
+                    <div class="text-xs text-red-400">Error: ${error.message}</div>
+                `;
+                fileResultsList.appendChild(errorDiv);
+            }
+            
+            lucide.createIcons();
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Hash comparison
+        compareBtn.addEventListener('click', async () => {
+            const hash1 = compareHash1.value.trim();
+            const hash2 = compareHash2.value.trim();
+
+            if (!hash1 || !hash2) {
+                showNotification('Vui lòng nhập cả hai hash', 'error');
+                return;
+            }
+
+            const originalContent = compareBtn.innerHTML;
+            compareBtn.innerHTML = '<div class="loading-spinner"></div><span>Đang so sánh...</span>';
+            compareBtn.disabled = true;
+
+            try {
+                const response = await fetch('/compare_hashes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        hash1: hash1,
+                        hash2: hash2
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                // Display comparison results
+                displayComparisonResults(data);
+                compareResults.style.display = 'block';
+
+            } catch (error) {
+                showNotification('Lỗi so sánh: ' + error.message, 'error');
+            }
+
+            compareBtn.innerHTML = originalContent;
+            compareBtn.disabled = false;
+            lucide.createIcons();
+        });
+
+        function displayComparisonResults(data) {
+            const compareStatus = document.getElementById('compareStatus');
+            const hash1Length = document.getElementById('hash1Length');
+            const hash2Length = document.getElementById('hash2Length');
+            const totalDifferences = document.getElementById('totalDifferences');
+            const differencesList = document.getElementById('differencesList');
+
+            if (data.match) {
+                compareStatus.innerHTML = '<span class="text-green-400">✅ Hash khớp hoàn toàn</span>';
+            } else {
+                compareStatus.innerHTML = '<span class="text-red-400">❌ Hash không khớp</span>';
+            }
+
+            hash1Length.textContent = data.hash1_length;
+            hash2Length.textContent = data.hash2_length;
+            totalDifferences.textContent = data.total_differences;
+
+            // Show differences
+            differencesList.innerHTML = '';
+            if (data.differences && data.differences.length > 0) {
+                data.differences.forEach((diff, index) => {
+                    const diffDiv = document.createElement('div');
+                    diffDiv.className = 'info-panel rounded-lg p-3 font-mono text-sm animate-fade-in-up';
+                    diffDiv.style.animationDelay = `${index * 0.1}s`;
+                    diffDiv.innerHTML = `
+                        Position ${diff.position}: 
+                        <span class="text-red-400">${diff.hash1_char}</span> → 
+                        <span class="text-green-400">${diff.hash2_char}</span>
+                    `;
+                    differencesList.appendChild(diffDiv);
+                });
+            }
+        }
+
+        // Benchmark functionality
+        runBenchmarkBtn.addEventListener('click', async () => {
+            const text = benchmarkText.value.trim();
+            const selectedAlgos = Array.from(document.querySelectorAll('.benchmark-algo:checked')).map(cb => cb.value);
+
+            if (!text || selectedAlgos.length === 0) {
+                showNotification('Vui lòng nhập text và chọn thuật toán', 'error');
+                return;
+            }
+
+            const originalContent = runBenchmarkBtn.innerHTML;
+            runBenchmarkBtn.innerHTML = '<div class="loading-spinner"></div><span>Đang benchmark...</span>';
+            runBenchmarkBtn.disabled = true;
+
+            try {
+                const response = await fetch('/benchmark', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        text: text,
+                        algorithms: selectedAlgos
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                displayBenchmarkResults(data.benchmarks);
+                benchmarkResults.style.display = 'block';
+
+            } catch (error) {
+                showNotification('Lỗi benchmark: ' + error.message, 'error');
+            }
+
+            runBenchmarkBtn.innerHTML = originalContent;
+            runBenchmarkBtn.disabled = false;
+            lucide.createIcons();
+        });
+
+        function displayBenchmarkResults(benchmarks) {
+            benchmarkList.innerHTML = '';
+            
+            benchmarks.forEach((bench, index) => {
+                const benchDiv = document.createElement('div');
+                benchDiv.className = 'flex justify-between items-center p-4 info-panel rounded-lg animate-fade-in-up hover-lift';
+                benchDiv.style.animationDelay = `${index * 0.1}s`;
+                
+                if (bench.error) {
+                    benchDiv.innerHTML = `
+                        <span class="font-mono font-bold text-red-400">${bench.algorithm.toUpperCase()}</span>
+                        <span class="text-red-400 text-sm">Error: ${bench.error}</span>
+                    `;
+                } else {
+                    benchDiv.innerHTML = `
+                        <span class="font-mono font-bold">${bench.algorithm.toUpperCase()}</span>
+                        <div class="text-right">
+                            <div class="text-sm font-medium">${bench.hashes_per_second.toLocaleString()} hashes/sec</div>
+                            <div class="text-xs text-gray-400 dark:text-gray-400 light:text-gray-600">${bench.total_time}ms total</div>
+                        </div>
+                    `;
+                }
+                
+                benchmarkList.appendChild(benchDiv);
+            });
+        }
+
+        // Modal functionality
+        shortcutsBtn.addEventListener('click', () => {
+            shortcutsModal.classList.add('active');
+            shortcutsModal.setAttribute('aria-hidden', 'false');
+        });
+
+        document.getElementById('closeQrModal').addEventListener('click', () => {
+            qrModal.classList.remove('active');
+            qrModal.setAttribute('aria-hidden', 'true');
+        });
+
+        document.getElementById('closeShortcutsModal').addEventListener('click', () => {
+            shortcutsModal.classList.remove('active');
+            shortcutsModal.setAttribute('aria-hidden', 'true');
+        });
+
+        // Close modals on outside click
+        [qrModal, shortcutsModal].forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                    modal.setAttribute('aria-hidden', 'true');
+                }
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey) {
+                switch (e.key) {
+                    case 'Enter':
+                        e.preventDefault();
+                        if (!isProcessing) generateBtn.click();
+                        break;
+                    case 'Delete':
+                        e.preventDefault();
+                        clearBtn.click();
+                        break;
+                    case 'c':
+                        if (currentHash && document.activeElement !== inputText && !e.target.matches('input, textarea')) {
+                            e.preventDefault();
+                            copyBtn.click();
+                        }
+                        break;
+                    case 't':
+                        e.preventDefault();
+                        toggleTheme();
+                        break;
+                    case 'i':
+                        e.preventDefault();
+                        inputText.focus();
+                        break;
+                    case '/':
+                    case '?':
+                        e.preventDefault();
+                        shortcutsModal.classList.add('active');
+                        shortcutsModal.setAttribute('aria-hidden', 'false');
+                        break;
+                }
+            }
+            
+            // ESC to close modals
+            if (e.key === 'Escape') {
+                qrModal.classList.remove('active');
+                shortcutsModal.classList.remove('active');
+                qrModal.setAttribute('aria-hidden', 'true');
+                shortcutsModal.setAttribute('aria-hidden', 'true');
+            }
+        });
+
+        // Auto-hide verify result when hash type changes
+        hashType.addEventListener('change', () => {
+            verifyResult.style.display = 'none';
+        });
+
+        // Enhanced notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            const icons = {
+                success: 'check-circle',
+                error: 'x-circle',
+                info: 'info',
+                warning: 'alert-triangle'
+            };
+            
+            const colors = {
+                success: 'bg-green-900 bg-opacity-90 border-green-600 text-green-300',
+                error: 'bg-red-900 bg-opacity-90 border-red-600 text-red-300',
+                info: 'bg-blue-900 bg-opacity-90 border-blue-600 text-blue-300',
+                warning: 'bg-yellow-900 bg-opacity-90 border-yellow-600 text-yellow-300'
+            };
+            
+            notification.className = `notification fixed top-32 right-4 z-50 p-4 rounded-xl font-mono text-sm max-w-sm animate-slide-up border ${colors[type]} flex items-center space-x-3`;
+            notification.innerHTML = `
+                <i data-lucide="${icons[type]}" class="w-5 h-5 flex-shrink-0"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            lucide.createIcons();
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Load hash history from localStorage
+        function loadHashHistory() {
+            const saved = localStorage.getItem('hashHistory');
+            if (saved) {
+                try {
+                    hashHistory = JSON.parse(saved);
+                } catch (error) {
+                    console.error('Error loading hash history:', error);
+                    hashHistory = [];
+                }
+            }
+        }
+
+        // Check QRCode library status
+        function checkQRCodeLibrary() {
+            if (typeof QRCode !== 'undefined') {
+                console.log('QRCode library loaded successfully');
+                return true;
+            } else {
+                console.warn('QRCode library not loaded, will use fallback methods');
+                return false;
+            }
+        }
+
+        // Initialize application
+        function init() {
+            loadHashHistory();
+            initTheme();
+            lucide.createIcons();
+            
+            // Check QRCode library status
+            setTimeout(() => {
+                const qrAvailable = checkQRCodeLibrary();
+                if (!qrAvailable) {
+                    console.log('QRCode library not available, fallback methods will be used');
+                }
+            }, 1000);
+            
+            // Focus on input field
+            inputText.focus();
+            
+            // Show welcome notification
+            setTimeout(() => {
+                showNotification('Chào mừng đến với HashGen Pro!', 'info');
+            }, 1500);
+        }
+
+        // Start the application
+        init();
+    </script>
+</body>
+</html>

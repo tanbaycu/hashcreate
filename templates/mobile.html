@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>HashGen Pro Mobile - Advanced Hash Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'mono': ['JetBrains Mono', 'monospace'],
+                        'sans': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'dark': '#0a0a0a',
+                        'darker': '#050505',
+                        'light-gray': '#1a1a1a',
+                        'medium-gray': '#2a2a2a',
+                        'accent': '#3a3a3a',
+                        'border': '#1f1f1f',
+                        'light-bg': '#f8fafc',
+                        'light-card': '#ffffff',
+                        'light-border': '#e2e8f0',
+                        'light-text': '#1e293b',
+                        'light-muted': '#64748b',
+                    },
+                    animation: {
+                        'slide-up': 'slideUp 0.3s ease-out',
+                        'slide-down': 'slideDown 0.3s ease-out',
+                        'slide-left': 'slideLeft 0.3s ease-out',
+                        'slide-right': 'slideRight 0.3s ease-out',
+                        'fade-in': 'fadeIn 0.3s ease-out',
+                        'bounce-in': 'bounceIn 0.4s ease-out',
+                        'scale-in': 'scaleIn 0.2s ease-out',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'wiggle': 'wiggle 0.5s ease-in-out',
+                        'shake': 'shake 0.5s ease-in-out',
+                    },
+                    keyframes: {
+                        slideUp: {
+                            '0%': { transform: 'translateY(100%)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        slideDown: {
+                            '0%': { transform: 'translateY(-100%)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        slideLeft: {
+                            '0%': { transform: 'translateX(100%)', opacity: '0' },
+                            '100%': { transform: 'translateX(0)', opacity: '1' },
+                        },
+                        slideRight: {
+                            '0%': { transform: 'translateX(-100%)', opacity: '0' },
+                            '100%': { transform: 'translateX(0)', opacity: '1' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        bounceIn: {
+                            '0%': { transform: 'scale(0.3)', opacity: '0' },
+                            '50%': { transform: 'scale(1.05)' },
+                            '70%': { transform: 'scale(0.9)' },
+                            '100%': { transform: 'scale(1)', opacity: '1' },
+                        },
+                        scaleIn: {
+                            '0%': { transform: 'scale(0.9)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' },
+                        },
+                        wiggle: {
+                            '0%, 100%': { transform: 'rotate(-3deg)' },
+                            '50%': { transform: 'rotate(3deg)' },
+                        },
+                        shake: {
+                            '0%, 100%': { transform: 'translateX(0)' },
+                            '10%, 30%, 50%, 70%, 90%': { transform: 'translateX(-2px)' },
+                            '20%, 40%, 60%, 80%': { transform: 'translateX(2px)' },
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Mobile-optimized styles */
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        input, textarea, select {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+        
+        /* Dark Mode Styles */
+        .mobile-card {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(42, 42, 42, 0.95) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .light .mobile-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        }
+        
+        .mobile-input {
+            background: rgba(26, 26, 26, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+            color: #ffffff;
+            font-size: 16px; /* Prevent zoom on iOS */
+        }
+        
+        .light .mobile-input {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            color: #1e293b;
+        }
+        
+        .mobile-input:focus {
+            border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            outline: none;
+        }
+        
+        .mobile-btn {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.2s ease;
+            color: #ffffff;
+            min-height: 48px; /* Touch-friendly */
+            touch-action: manipulation;
+        }
+        
+        .light .mobile-btn {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            color: #1e293b;
+        }
+        
+        .mobile-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .mobile-btn:disabled {
+            opacity: 0.6;
+            transform: none;
+        }
+        
+        .mobile-result {
+            background: rgba(5, 5, 5, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            font-family: 'JetBrains Mono', monospace;
+            color: #ffffff;
+            word-break: break-all;
+        }
+        
+        .light .mobile-result {
+            background: rgba(248, 250, 252, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            color: #1e293b;
+        }
+        
+        .mobile-header {
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .light .mobile-header {
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+        
+        .mobile-nav {
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .light .mobile-nav {
+            background: rgba(255, 255, 255, 0.95);
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+        }
+        
+        .nav-item {
+            transition: all 0.2s ease;
+            min-height: 60px;
+        }
+        
+        .nav-item.active {
+            color: #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
+        }
+        
+        .nav-item:active {
+            transform: scale(0.95);
+        }
+        
+        .theme-toggle-mobile {
+            width: 50px;
+            height: 26px;
+            background: #374151;
+            border-radius: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .theme-toggle-mobile.active {
+            background: #3b82f6;
+        }
+        
+        .theme-toggle-slider-mobile {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .theme-toggle-mobile.active .theme-toggle-slider-mobile {
+            transform: translateX(24px);
+        }
+        
+        .swipe-indicator {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        
+        .swipe-left {
+            right: 10px;
+        }
+        
+        .swipe-right {
+            left: 10px;
+        }
+        
+        .floating-action {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .floating-action:active {
+            transform: scale(0.9);
+        }
+        
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        
+        .progress-ring-circle {
+            stroke-dasharray: 251.2;
+            stroke-dashoffset: 251.2;
+            transition: stroke-dashoffset 0.3s ease;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 20px;
+            right: 20px;
+            z-index: 2000;
+            transform: translateY(200px);
+            transition: transform 0.3s ease;
+            opacity: 0;
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .modal-mobile {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 3000;
+            display: flex;
+            align-items: flex-end;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-mobile.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content-mobile {
+            background: rgba(26, 26, 26, 0.95);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            padding: 24px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .light .modal-content-mobile {
+            background: rgba(255, 255, 255, 0.95);
+        }
+        
+        .modal-mobile.active .modal-content-mobile {
+            transform: translateY(0);
+        }
+        
+        .pull-indicator {
+            width: 40px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            margin: 0 auto 20px;
+        }
+        
+        .light .pull-indicator {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Custom scrollbar for mobile */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+        }
+        
+        .light ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Safe area handling */
+        .safe-area-top {
+            padding-top: env(safe-area-inset-top);
+        }
+        
+        .safe-area-bottom {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        
+        /* Haptic feedback simulation */
+        .haptic-light:active {
+            animation: wiggle 0.1s ease-in-out;
+        }
+        
+        .haptic-medium:active {
+            animation: shake 0.2s ease-in-out;
+        }
+        
+        /* Loading states */
+        .loading-dots {
+            display: inline-block;
+        }
+        
+        .loading-dots::after {
+            content: '';
+            animation: loading-dots 1.5s infinite;
+        }
+        
+        @keyframes loading-dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+        
+        /* Swipe gestures */
+        .swipeable {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .swipe-content {
+            transition: transform 0.3s ease;
+        }
+        
+        .swipe-actions {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            background: #ef4444;
+            color: white;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .swiped .swipe-actions {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body class="bg-dark text-white font-sans min-h-screen overflow-x-hidden transition-colors duration-300">
+    <!-- Mobile Header -->
+    <header class="mobile-header fixed top-0 left-0 right-0 z-50 safe-area-top">
+        <div class="flex items-center justify-between px-4 py-3">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                    <i data-lucide="hash" class="w-5 h-5 text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-mono font-bold">HashGen Pro</h1>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 light:text-gray-600 font-mono">Mobile</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <div class="theme-toggle-mobile" id="themeToggle">
+                    <div class="theme-toggle-slider-mobile">
+                        <i data-lucide="moon" class="w-3 h-3 text-gray-600" id="themeIcon"></i>
+                    </div>
+                </div>
+                <button id="menuBtn" class="p-2 rounded-lg hover:bg-gray-700 dark:hover:bg-gray-700 light:hover:bg-gray-200 transition-colors">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="pt-20 pb-20 px-4">
+        <!-- Single Hash Section -->
+        <div id="singleSection" class="section active">
+            <div class="mobile-card rounded-2xl p-6 mb-6 animate-slide-up">
+                <div class="space-y-6">
+                    <!-- Input -->
+                    <div class="space-y-3">
+                        <label for="inputText" class="block text-sm font-mono font-medium flex items-center space-x-2">
+                            <i data-lucide="type" class="w-4 h-4"></i>
+                            <span>Văn bản</span>
+                        </label>
+                        <textarea 
+                            id="inputText" 
+                            class="mobile-input w-full h-32 px-4 py-3 rounded-xl resize-none font-mono text-sm"
+                            placeholder="Nhập văn bản cần hash..."
+                        ></textarea>
+                        <div class="text-xs text-gray-500 dark:text-gray-500 light:text-gray-600 font-mono">
+                            <span id="charCount">0</span> ký tự
+                        </div>
+                    </div>
+
+                    <!-- Algorithm Selection -->
+                    <div class="space-y-3">
+                        <label for="hashType" class="block text-sm font-mono font-medium flex items-center space-x-2">
+                            <i data-lucide="settings" class="w-4 h-4"></i>
+                            <span>Thuật toán</span>
+                        </label>
+                        <select id="hashType" class="mobile-input w-full px-4 py-3 rounded-xl font-mono text-sm">
+                            <optgroup label="🔹 Cơ bản">
+                                <option value="md5">MD5</option>
+                                <option value="sha1">SHA-1</option>
+                                <option value="sha256" selected>SHA-256</option>
+                                <option value="sha512">SHA-512</option>
+                            </optgroup>
+                            <optgroup label="🔐 Password">
+                                <option value="bcrypt">bcrypt</option>
+                                <option value="argon2">Argon2</option>
+                                <option value="scrypt">scrypt</option>
+                            </optgroup>
+                            <optgroup label="📝 Encoding">
+                                <option value="base64">Base64</option>
+                                <option value="base32">Base32</option>
+                                <option value="hex">Hexadecimal</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <!-- Salt Input -->
+                    <div class="space-y-3">
+                        <label for="saltInput" class="block text-sm font-mono font-medium flex items-center space-x-2">
+                            <i data-lucide="key" class="w-4 h-4"></i>
+                            <span>Salt (tùy chọn)</span>
+                        </label>
+                        <div class="flex space-x-2">
+                            <input 
+                                type="text" 
+                                id="saltInput" 
+                                class="mobile-input flex-1 px-4 py-3 rounded-xl font-mono text-sm"
+                                placeholder="Salt..."
+                            >
+                            <button id="generateSaltBtn" class="mobile-btn px-4 py-3 rounded-xl haptic-light">
+                                <i data-lucide="shuffle" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Generate Button -->
+                    <button 
+                        id="generateBtn" 
+                        class="mobile-btn w-full px-6 py-4 rounded-xl font-mono font-medium flex items-center justify-center space-x-3 haptic-medium"
+                    >
+                        <i data-lucide="zap" class="w-5 h-5"></i>
+                        <span>Tạo Hash</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Result Section -->
+            <div id="resultSection" class="mobile-card rounded-2xl p-6 mb-6" style="display: none;">
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-sm font-mono font-medium flex items-center space-x-2">
+                            <i data-lucide="shield-check" class="w-4 h-4"></i>
+                            <span>Kết quả</span>
+                        </h3>
+                        <div class="flex space-x-2">
+                            <button id="copyBtn" class="mobile-btn p-2 rounded-lg haptic-light" style="display: none;">
+                                <i data-lucide="copy" class="w-4 h-4"></i>
+                            </button>
+                            <button id="qrBtn" class="mobile-btn p-2 rounded-lg haptic-light" style="display: none;">
+                                <i data-lucide="qr-code" class="w-4 h-4"></i>
+                            </button>
+                            <button id="shareBtn" class="mobile-btn p-2 rounded-lg haptic-light" style="display: none;">
+                                <i data-lucide="share" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mobile-result rounded-xl p-4 min-h-24">
+                        <div id="hashResult" class="text-sm leading-relaxed">
+                            Kết quả sẽ hiển thị ở đây...
+                        </div>
+                    </div>
+
+                    <!-- Hash Info -->
+                    <div id="hashInfo" class="space-y-3" style="display: none;">
+                        <div class="grid grid-cols-3 gap-3 text-xs font-mono">
+                            <div class="text-center">
+                                <div class="text-gray-400 dark:text-gray-400 light:text-gray-600">Thuật toán</div>
+                                <div id="infoType" class="font-medium"></div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-gray-400 dark:text-gray-400 light:text-gray-600">Độ dài</div>
+                                <div id="infoLength" class="font-medium"></div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-gray-400 dark:text-gray-400 light:text-gray-600">Thời gian</div>
+                                <div id="infoTime" class="font-medium"></div>
+                            </div>
+                        </div>
+
+                        <!-- Strength Analysis -->
+                        <div id="strengthAnalysis" class="space-y-2">
+                            <div class="flex items-center justify-between text-sm">
+                                <span class="font-mono">Độ mạnh:</span>
+                                <span id="strengthLevel" class="font-mono font-bold"></span>
+                            </div>
+                            <div class="h-2 bg-gray-700 dark:bg-gray-700 light:bg-gray-300 rounded-full overflow-hidden">
+                                <div id="strengthFill" class="h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="grid grid-cols-2 gap-3 mb-6">
+                <button id="clearBtn" class="mobile-btn px-4 py-3 rounded-xl font-mono flex items-center justify-center space-x-2 haptic-light">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    <span>Xóa</span>
+                </button>
+                <button id="historyBtn" class="mobile-btn px-4 py-3 rounded-xl font-mono flex items-center justify-center space-x-2 haptic-light">
+                    <i data-lucide="history" class="w-4 h-4"></i>
+                    <span>Lịch sử</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Batch Section -->
+        <div id="batchSection" class="section" style="display: none;">
+            <div class="mobile-card rounded-2xl p-6 mb-6">
+                <div class="space-y-6">
+                    <div class="text-center">
+                        <h3 class="text-lg font-mono font-bold mb-2">Batch Processing</h3>
+                        <p class="text-sm text-gray-400 dark:text-gray-400 light:text-gray-600 font-mono">Xử lý nhiều văn bản</p>
+                    </div>
+
+                    <div class="space-y-3">
+                        <label for="batchInput" class="block text-sm font-mono font-medium">
+                            Danh sách văn bản
+                        </label>
+                        <textarea 
+                            id="batchInput" 
+                            class="mobile-input w-full h-40 px-4 py-3 rounded-xl resize-none font-mono text-sm"
+                            placeholder="text1&#10;text2&#10;text3..."
+                        ></textarea>
+                    </div>
+
+                    <div class="space-y-3">
+                        <label for="batchHashType" class="block text-sm font-mono font-medium">Thuật toán</label>
+                        <select id="batchHashType" class="mobile-input w-full px-4 py-3 rounded-xl font-mono text-sm">
+                            <option value="md5">MD5</option>
+                            <option value="sha256" selected>SHA-256</option>
+                            <option value="sha512">SHA-512</option>
+                        </select>
+                    </div>
+
+                    <button 
+                        id="batchProcessBtn" 
+                        class="mobile-btn w-full px-6 py-4 rounded-xl font-mono font-medium flex items-center justify-center space-x-3 haptic-medium"
+                    >
+                        <i data-lucide="layers" class="w-5 h-5"></i>
+                        <span>Xử lý Batch</span>
+                    </button>
+
+                    <div id="batchProgress" class="space-y-2" style="display: none;">
+                        <div class="flex justify-between text-sm font-mono">
+                            <span>Đang xử lý...</span>
+                            <span id="batchProgressText">0%</span>
+                        </div>
+                        <div class="h-2 bg-gray-700 dark:bg-gray-700 light:bg-gray-300 rounded-full overflow-hidden">
+                            <div id="batchProgressFill" class="h-full bg-blue-500 rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="batchResults" class="space-y-3" style="display: none;">
+                <div class="flex items-center justify-between mb-4">
+                    <h4 class="font-mono font-medium">Kết quả</h4>
+                    <button id="exportBatchBtn" class="mobile-btn px-3 py-2 rounded-lg text-sm haptic-light">
+                        <i data-lucide="download" class="w-4 h-4"></i>
+                    </button>
+                </div>
+                <div id="batchResultsList" class="space-y-2"></div>
+            </div>
+        </div>
+
+        <!-- File Section -->
+        <div id="fileSection" class="section" style="display: none;">
+            <div class="mobile-card rounded-2xl p-6 mb-6">
+                <div class="space-y-6">
+                    <div class="text-center">
+                        <h3 class="text-lg font-mono font-bold mb-2">File Hash</h3>
+                        <p class="text-sm text-gray-400 dark:text-gray-400 light:text-gray-600 font-mono">Upload và hash file</p>
+                    </div>
+
+                    <div class="border-2 border-dashed border-gray-600 dark:border-gray-600 light:border-gray-400 rounded-xl p-8 text-center" id="dropZone">
+                        <i data-lucide="upload-cloud" class="w-12 h-12 mx-auto mb-3 text-gray-400"></i>
+                        <p class="font-mono mb-2">Chạm để chọn file</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-500 light:text-gray-600 font-mono">hoặc kéo thả vào đây</p>
+                        <input type="file" id="fileInput" class="hidden" multiple>
+                    </div>
+
+                    <div class="space-y-3">
+                        <label for="fileHashType" class="block text-sm font-mono font-medium">Thuật toán</label>
+                        <select id="fileHashType" class="mobile-input w-full px-4 py-3 rounded-xl font-mono text-sm">
+                            <option value="md5">MD5</option>
+                            <option value="sha1">SHA-1</option>
+                            <option value="sha256" selected>SHA-256</option>
+                            <option value="sha512">SHA-512</option>
+                        </select>
+                    </div>
+
+                    <div id="fileStatus" class="text-sm font-mono text-gray-400 dark:text-gray-400 light:text-gray-600 text-center">
+                        Chưa chọn file
+                    </div>
+                </div>
+            </div>
+
+            <div id="fileResults" class="space-y-3" style="display: none;">
+                <h4 class="font-mono font-medium">Kết quả File</h4>
+                <div id="fileResultsList" class="space-y-3"></div>
+            </div>
+        </div>
+
+        <!-- Compare Section -->
+        <div id="compareSection" class="section" style="display: none;">
+            <div class="mobile-card rounded-2xl p-6 mb-6">
+                <div class="space-y-6">
+                    <div class="text-center">
+                        <h3 class="text-lg font-mono font-bold mb-2">So sánh Hash</h3>
+                        <p class="text-sm text-gray-400 dark:text-gray-400 light:text-gray-600 font-mono">Phân tích sự khác biệt</p>
+                    </div>
+
+                    <div class="space-y-3">
+                        <label for="compareHash1" class="block text-sm font-mono font-medium">Hash 1</label>
+                        <textarea 
+                            id="compareHash1" 
+                            class="mobile-input w-full h-24 px-4 py-3 rounded-xl resize-none font-mono text-sm"
+                            placeholder="Nhập hash đầu tiên..."
+                        ></textarea>
+                    </div>
+
+                    <div class="space-y-3">
+                        <label for="compareHash2" class="block text-sm font-mono font-medium">Hash 2</label>
+                        <textarea 
+                            id="compareHash2" 
+                            class="mobile-input w-full h-24 px-4 py-3 rounded-xl resize-none font-mono text-sm"
+                            placeholder="Nhập hash thứ hai..."
+                        ></textarea>
+                    </div>
+
+                    <button 
+                        id="compareBtn" 
+                        class="mobile-btn w-full px-6 py-4 rounded-xl font-mono font-medium flex items-center justify-center space-x-3 haptic-medium"
+                    >
+                        <i data-lucide="git-compare" class="w-5 h-5"></i>
+                        <span>So sánh</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="compareResults" class="mobile-card rounded-2xl p-6" style="display: none;">
+                <div class="space-y-4">
+                    <h4 class="font-mono font-medium">Kết quả So sánh</h4>
+                    <div id="compareStatus" class="text-center font-mono"></div>
+                    <div class="grid grid-cols-3 gap-3 text-xs font-mono text-center">
+                        <div>
+                            <div class="text-gray-400 dark:text-gray-400 light:text-gray-600">Length 1</div>
+                            <div id="hash1Length" class="font-medium"></div>
+                        </div>
+                        <div>
+                            <div class="text-gray-400 dark:text-gray-400 light:text-gray-600">Length 2</div>
+                            <div id="hash2Length" class="font-medium"></div>
+                        </div>
+                        <div>
+                            <div class="text-gray-400 dark:text-gray-400 light:text-gray-600">Differences</div>
+                            <div id="totalDifferences" class="font-medium"></div>
+                        </div>
+                    </div>
+                    <div id="differencesList" class="space-y-2"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="mobile-nav fixed bottom-0 left-0 right-0 z-50 safe-area-bottom">
+        <div class="flex">
+            <button class="nav-item flex-1 flex flex-col items-center justify-center py-2 active haptic-light" data-section="single">
+                <i data-lucide="hash" class="w-5 h-5 mb-1"></i>
+                <span class="text-xs font-mono">Hash</span>
+            </button>
+            <button class="nav-item flex-1 flex flex-col items-center justify-center py-2 haptic-light" data-section="batch">
+                <i data-lucide="layers" class="w-5 h-5 mb-1"></i>
+                <span class="text-xs font-mono">Batch</span>
+            </button>
+            <button class="nav-item flex-1 flex flex-col items-center justify-center py-2 haptic-light" data-section="file">
+                <i data-lucide="file-up" class="w-5 h-5 mb-1"></i>
+                <span class="text-xs font-mono">File</span>
+            </button>
+            <button class="nav-item flex-1 flex flex-col items-center justify-center py-2 haptic-light" data-section="compare">
+                <i data-lucide="git-compare" class="w-5 h-5 mb-1"></i>
+                <span class="text-xs font-mono">Compare</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Floating Action Button -->
+    <button class="floating-action flex items-center justify-center haptic-medium" id="fabBtn" style="display: none;">
+        <i data-lucide="zap" class="w-6 h-6 text-white"></i>
+    </button>
+
+    <!-- Modals -->
+    <!-- QR Modal -->
+    <div id="qrModal" class="modal-mobile">
+        <div class="modal-content-mobile">
+            <div class="pull-indicator"></div>
+            <div class="text-center">
+                <h3 class="text-lg font-mono font-bold mb-4">QR Code</h3>
+                <div id="qrCodeContainer" class="mx-auto mb-4 p-4 bg-white rounded-lg inline-block"></div>
+                <p class="text-sm text-gray-400 dark:text-gray-400 light:text-gray-600 font-mono">Scan để copy hash</p>
+                <button id="closeQrModal" class="mobile-btn w-full mt-4 px-4 py-3 rounded-xl">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu Modal -->
+    <div id="menuModal" class="modal-mobile">
+        <div class="modal-content-mobile">
+            <div class="pull-indicator"></div>
+            <div class="space-y-4">
+                <h3 class="text-lg font-mono font-bold">Menu</h3>
+                <div class="space-y-2">
+                    <button class="mobile-btn w-full px-4 py-3 rounded-xl text-left flex items-center space-x-3" id="settingsBtn">
+                        <i data-lucide="settings" class="w-5 h-5"></i>
+                        <span>Cài đặt</span>
+                    </button>
+                    <button class="mobile-btn w-full px-4 py-3 rounded-xl text-left flex items-center space-x-3" id="aboutBtn">
+                        <i data-lucide="info" class="w-5 h-5"></i>
+                        <span>Về ứng dụng</span>
+                    </button>
+                    <button class="mobile-btn w-full px-4 py-3 rounded-xl text-left flex items-center space-x-3" id="keyboardBtn">
+                        <i data-lucide="keyboard" class="w-5 h-5"></i>
+                        <span>Phím tắt</span>
+                    </button>
+                </div>
+                <button id="closeMenuModal" class="mobile-btn w-full px-4 py-3 rounded-xl">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div id="historyModal" class="modal-mobile">
+        <div class="modal-content-mobile">
+            <div class="pull-indicator"></div>
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-mono font-bold">Lịch sử Hash</h3>
+                    <button id="clearHistoryBtn" class="text-red-400 text-sm font-mono">Xóa tất cả</button>
+                </div>
+                <div id="historyList" class="space-y-2 max-h-60 overflow-y-auto">
+                    <div class="text-center text-gray-400 dark:text-gray-400 light:text-gray-600 font-mono text-sm py-8">
+                        Chưa có lịch sử
+                    </div>
+                </div>
+                <button id="closeHistoryModal" class="mobile-btn w-full px-4 py-3 rounded-xl">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <div class="mobile-card rounded-xl p-4 flex items-center space-x-3">
+            <i id="toastIcon" data-lucide="info" class="w-5 h-5 flex-shrink-0"></i>
+            <span id="toastMessage" class="font-mono text-sm flex-1"></span>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Global variables
+        let currentTheme = localStorage.getItem('theme') || 'dark';
+        let hashHistory = [];
+        let currentHash = '';
+        let isProcessing = false;
+        let currentSection = 'single';
+
+        // DOM elements
+        const body = document.body;
+        const html = document.documentElement;
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        
+        // Navigation
+        const navItems = document.querySelectorAll('.nav-item');
+        const sections = document.querySelectorAll('.section');
+        
+        // Single hash elements
+        const inputText = document.getElementById('inputText');
+        const hashType = document.getElementById('hashType');
+        const saltInput = document.getElementById('saltInput');
+        const generateBtn = document.getElementById('generateBtn');
+        const generateSaltBtn = document.getElementById('generateSaltBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const hashResult = document.getElementById('hashResult');
+        const copyBtn = document.getElementById('copyBtn');
+        const qrBtn = document.getElementById('qrBtn');
+        const shareBtn = document.getElementById('shareBtn');
+        const resultSection = document.getElementById('resultSection');
+        const hashInfo = document.getElementById('hashInfo');
+        const charCount = document.getElementById('charCount');
+        
+        // Batch elements
+        const batchInput = document.getElementById('batchInput');
+        const batchHashType = document.getElementById('batchHashType');
+        const batchProcessBtn = document.getElementById('batchProcessBtn');
+        const batchProgress = document.getElementById('batchProgress');
+        const batchProgressFill = document.getElementById('batchProgressFill');
+        const batchProgressText = document.getElementById('batchProgressText');
+        const batchResults = document.getElementById('batchResults');
+        const batchResultsList = document.getElementById('batchResultsList');
+        
+        // File elements
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const fileHashType = document.getElementById('fileHashType');
+        const fileStatus = document.getElementById('fileStatus');
+        const fileResults = document.getElementById('fileResults');
+        const fileResultsList = document.getElementById('fileResultsList');
+        
+        // Compare elements
+        const compareHash1 = document.getElementById('compareHash1');
+        const compareHash2 = document.getElementById('compareHash2');
+        const compareBtn = document.getElementById('compareBtn');
+        const compareResults = document.getElementById('compareResults');
+        
+        // Modal elements
+        const qrModal = document.getElementById('qrModal');
+        const menuModal = document.getElementById('menuModal');
+        const historyModal = document.getElementById('historyModal');
+        const menuBtn = document.getElementById('menuBtn');
+        const historyBtn = document.getElementById('historyBtn');
+        const qrCodeContainer = document.getElementById('qrCodeContainer');
+        const toast = document.getElementById('toast');
+        const toastIcon = document.getElementById('toastIcon');
+        const toastMessage = document.getElementById('toastMessage');
+        
+        // Initialize theme
+        function initTheme() {
+            if (currentTheme === 'light') {
+                body.classList.remove('bg-dark', 'text-white');
+                body.classList.add('bg-light-bg', 'text-light-text', 'light');
+                html.classList.add('light');
+                themeToggle.classList.add('active');
+                themeIcon.setAttribute('data-lucide', 'sun');
+            } else {
+                body.classList.remove('bg-light-bg', 'text-light-text', 'light');
+                body.classList.add('bg-dark', 'text-white');
+                html.classList.remove('light');
+                themeToggle.classList.remove('active');
+                themeIcon.setAttribute('data-lucide', 'moon');
+            }
+            lucide.createIcons();
+        }
+
+        // Theme toggle
+        themeToggle.addEventListener('click', () => {
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', currentTheme);
+            initTheme();
+            showToast(`Chuyển sang chế độ ${currentTheme === 'light' ? 'sáng' : 'tối'}`, 'info');
+        });
+
+        // Navigation
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const sectionName = item.getAttribute('data-section');
+                switchSection(sectionName);
+            });
+        });
+
+        function switchSection(sectionName) {
+            // Update nav items
+            navItems.forEach(item => item.classList.remove('active'));
+            document.querySelector(`[data-section="${sectionName}"]`).classList.add('active');
+            
+            // Update sections
+            sections.forEach(section => section.style.display = 'none');
+            document.getElementById(`${sectionName}Section`).style.display = 'block';
+            
+            currentSection = sectionName;
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Character counter
+        inputText.addEventListener('input', () => {
+            charCount.textContent = inputText.value.length;
+        });
+
+        // Generate salt
+        generateSaltBtn.addEventListener('click', () => {
+            const salt = Array.from(crypto.getRandomValues(new Uint8Array(16)))
+                .map(b => b.toString(16).padStart(2, '0'))
+                .join('');
+            saltInput.value = salt;
+            showToast('Đã tạo salt ngẫu nhiên', 'success');
+        });
+
+        // Generate hash
+        generateBtn.addEventListener('click', generateHash);
+
+        async function generateHash() {
+            const text = inputText.value.trim();
+            if (!text) {
+                showToast('Vui lòng nhập văn bản', 'error');
+                inputText.focus();
+                return;
+            }
+
+            if (isProcessing) return;
+            isProcessing = true;
+
+            const originalContent = generateBtn.innerHTML;
+            generateBtn.innerHTML = '<div class="loading-dots"></div><span>Đang tạo</span>';
+            generateBtn.disabled = true;
+
+            try {
+                const response = await fetch('/generate_hash', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        text: text,
+                        hash_type: hashType.value,
+                        salt: saltInput.value,
+                        iterations: 10000
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                // Display result
+                currentHash = data.hash;
+                hashResult.textContent = data.hash;
+                hashResult.className = 'text-sm leading-relaxed text-green-400 animate-fade-in';
+                
+                // Show result section and buttons
+                resultSection.style.display = 'block';
+                copyBtn.style.display = 'block';
+                qrBtn.style.display = 'block';
+                shareBtn.style.display = 'block';
+                hashInfo.style.display = 'block';
+
+                // Update info
+                document.getElementById('infoType').textContent = data.type.toUpperCase();
+                document.getElementById('infoLength').textContent = data.length;
+                document.getElementById('infoTime').textContent = data.processing_time + 'ms';
+
+                // Update strength analysis
+                if (data.strength) {
+                    updateStrengthAnalysis(data.strength);
+                }
+
+                // Save to history
+                saveToHistory({
+                    hash: data.hash,
+                    original: text,
+                    type: data.type,
+                    timestamp: new Date().toISOString()
+                });
+
+                showToast('Hash được tạo thành công!', 'success');
+
+            } catch (error) {
+                hashResult.textContent = 'Lỗi: ' + error.message;
+                hashResult.className = 'text-sm leading-relaxed text-red-400';
+                showToast('Có lỗi xảy ra: ' + error.message, 'error');
+            }
+
+            generateBtn.innerHTML = originalContent;
+            generateBtn.disabled = false;
+            isProcessing = false;
+        }
+
+        function updateStrengthAnalysis(strength) {
+            const strengthLevel = document.getElementById('strengthLevel');
+            const strengthFill = document.getElementById('strengthFill');
+            
+            strengthLevel.textContent = strength.level;
+            strengthFill.style.width = strength.score + '%';
+            
+            // Update strength bar color
+            if (strength.score >= 80) {
+                strengthFill.className = 'h-full rounded-full transition-all duration-500 bg-cyan-400';
+                strengthLevel.className = 'font-mono font-bold text-cyan-400';
+            } else if (strength.score >= 60) {
+                strengthFill.className = 'h-full rounded-full transition-all duration-500 bg-green-400';
+                strengthLevel.className = 'font-mono font-bold text-green-400';
+            } else if (strength.score >= 40) {
+                strengthFill.className = 'h-full rounded-full transition-all duration-500 bg-yellow-400';
+                strengthLevel.className = 'font-mono font-bold text-yellow-400';
+            } else {
+                strengthFill.className = 'h-full rounded-full transition-all duration-500 bg-red-400';
+                strengthLevel.className = 'font-mono font-bold text-red-400';
+            }
+        }
+
+        // Copy to clipboard
+        copyBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(hashResult.textContent);
+                const originalContent = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i>';
+                copyBtn.classList.add('bg-green-600');
+                showToast('Đã sao chép!', 'success');
+                
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalContent;
+                    copyBtn.classList.remove('bg-green-600');
+                    lucide.createIcons();
+                }, 2000);
+            } catch (error) {
+                showToast('Không thể sao chép', 'error');
+            }
+        });
+
+        // QR Code generation
+        qrBtn.addEventListener('click', () => {
+            if (currentHash) {
+                generateQRCode(currentHash);
+                qrModal.classList.add('active');
+            }
+        });
+
+        function generateQRCode(text) {
+            qrCodeContainer.innerHTML = '';
+            QRCode.toCanvas(qrCodeContainer, text, {
+                width: 200,
+                height: 200,
+                margin: 2,
+                color: {
+                    dark: '#000000',
+                    light: '#FFFFFF'
+                }
+            }, function (error) {
+                if (error) {
+                    qrCodeContainer.innerHTML = '<div class="text-red-500 p-4">Không thể tạo QR code</div>';
+                }
+            });
+        }
+
+        // Share functionality
+        shareBtn.addEventListener('click', async () => {
+            if (navigator.share && currentHash) {
+                try {
+                    await navigator.share({
+                        title: 'Hash Result',
+                        text: `Hash: ${currentHash}`,
+                    });
+                } catch (error) {
+                    // Fallback to clipboard
+                    copyBtn.click();
+                }
+            } else {
+                copyBtn.click();
+            }
+        });
+
+        // Clear all
+        clearBtn.addEventListener('click', () => {
+            inputText.value = '';
+            saltInput.value = '';
+            hashResult.textContent = 'Kết quả sẽ hiển thị ở đây...';
+            hashResult.className = 'text-sm leading-relaxed';
+            resultSection.style.display = 'none';
+            copyBtn.style.display = 'none';
+            qrBtn.style.display = 'none';
+            shareBtn.style.display = 'none';
+            hashInfo.style.display = 'none';
+            charCount.textContent = '0';
+            currentHash = '';
+            showToast('Đã xóa tất cả', 'info');
+        });
+
+        // Batch processing
+        batchProcessBtn.addEventListener('click', async () => {
+            const texts = batchInput.value.split('\n').filter(t => t.trim());
+            if (texts.length === 0) {
+                showToast('Vui lòng nhập danh sách văn bản', 'error');
+                return;
+            }
+
+            const originalContent = batchProcessBtn.innerHTML;
+            batchProcessBtn.innerHTML = '<div class="loading-dots"></div><span>Đang xử lý</span>';
+            batchProcessBtn.disabled = true;
+            batchProgress.style.display = 'block';
+
+            try {
+                const response = await fetch('/batch_hash', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        texts: texts,
+                        hash_type: batchHashType.value
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                // Animate progress
+                batchProgressFill.style.width = '100%';
+                batchProgressText.textContent = '100%';
+                
+                // Display results
+                displayBatchResults(data.results);
+                batchResults.style.display = 'block';
+                showToast(`Đã xử lý ${data.total_processed} văn bản`, 'success');
+
+            } catch (error) {
+                showToast('Lỗi batch processing: ' + error.message, 'error');
+            }
+
+            batchProcessBtn.innerHTML = originalContent;
+            batchProcessBtn.disabled = false;
+            batchProgress.style.display = 'none';
+            batchProgressFill.style.width = '0%';
+            batchProgressText.textContent = '0%';
+        });
+
+        function displayBatchResults(results) {
+            batchResultsList.innerHTML = '';
+            results.forEach((result, index) => {
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'mobile-card rounded-lg p-3 space-y-2 swipeable';
+                resultDiv.innerHTML = `
+                    <div class="swipe-content">
+                        <div class="flex justify-between items-center">
+                            <span class="font-mono text-xs text-gray-400">#${result.index}</span>
+                            <button class="copy-batch-btn p-1 rounded haptic-light" data-hash="${result.hash}">
+                                <i data-lucide="copy" class="w-3 h-3"></i>
+                            </button>
+                        </div>
+                        <div class="font-mono text-xs text-gray-300 dark:text-gray-300 light:text-gray-700 truncate">${result.original}</div>
+                        <div class="font-mono text-xs text-green-400 break-all">${result.hash}</div>
+                    </div>
+                    <div class="swipe-actions">
+                        <i data-lucide="copy" class="w-4 h-4"></i>
+                    </div>
+                `;
+                batchResultsList.appendChild(resultDiv);
+                
+                // Add swipe functionality
+                setupSwipeActions(resultDiv, result.hash);
+            });
+            
+            // Add copy functionality
+            document.querySelectorAll('.copy-batch-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    const hash = e.currentTarget.getAttribute('data-hash');
+                    try {
+                        await navigator.clipboard.writeText(hash);
+                        showToast('Đã sao chép hash', 'success');
+                    } catch (error) {
+                        showToast('Không thể sao chép', 'error');
+                    }
+                });
+            });
+            
+            lucide.createIcons();
+        }
+
+        // File upload functionality
+        dropZone.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', handleFileSelect);
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('border-blue-500');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('border-blue-500');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-blue-500');
+            const files = e.dataTransfer.files;
+            handleFiles(files);
+        });
+
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            handleFiles(files);
+        }
+
+        async function handleFiles(files) {
+            if (files.length === 0) return;
+
+            fileStatus.textContent = `Đã chọn ${files.length} file(s)`;
+            fileResults.style.display = 'block';
+            fileResultsList.innerHTML = '';
+
+            for (let i = 0; i < files.length; i++) {
+                await processFile(files[i]);
+            }
+        }
+
+        async function processFile(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('hash_type', fileHashType.value);
+
+            try {
+                const response = await fetch('/upload_file', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'mobile-card rounded-lg p-3 space-y-2';
+                resultDiv.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <span class="font-mono text-sm font-bold truncate flex-1">${data.filename}</span>
+                        <button class="copy-file-btn p-1 rounded haptic-light" data-hash="${data.hash}">
+                            <i data-lucide="copy" class="w-3 h-3"></i>
+                        </button>
+                    </div>
+                    <div class="text-xs text-gray-400 font-mono">
+                        ${formatFileSize(data.size)} | ${data.type.toUpperCase()} | ${data.processing_time}ms
+                    </div>
+                    <div class="font-mono text-xs text-green-400 break-all">${data.hash}</div>
+                `;
+                fileResultsList.appendChild(resultDiv);
+
+                // Add copy functionality
+                const copyBtn = resultDiv.querySelector('.copy-file-btn');
+                copyBtn.addEventListener('click', async (e) => {
+                    const hash = e.currentTarget.getAttribute('data-hash');
+                    try {
+                        await navigator.clipboard.writeText(hash);
+                        showToast('Đã sao chép file hash', 'success');
+                    } catch (error) {
+                        showToast('Không thể sao chép', 'error');
+                    }
+                });
+
+            } catch (error) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'mobile-card rounded-lg p-3 bg-red-900 bg-opacity-20 border border-red-600';
+                errorDiv.innerHTML = `
+                    <div class="font-mono text-sm font-bold text-red-300">${file.name}</div>
+                    <div class="text-xs text-red-400">Error: ${error.message}</div>
+                `;
+                fileResultsList.appendChild(errorDiv);
+            }
+            
+            lucide.createIcons();
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Hash comparison
+        compareBtn.addEventListener('click', async () => {
+            const hash1 = compareHash1.value.trim();
+            const hash2 = compareHash2.value.trim();
+
+            if (!hash1 || !hash2) {
+                showToast('Vui lòng nhập cả hai hash', 'error');
+                return;
+            }
+
+            const originalContent = compareBtn.innerHTML;
+            compareBtn.innerHTML = '<div class="loading-dots"></div><span>Đang so sánh</span>';
+            compareBtn.disabled = true;
+
+            try {
+                const response = await fetch('/compare_hashes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        hash1: hash1,
+                        hash2: hash2
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                displayComparisonResults(data);
+                compareResults.style.display = 'block';
+
+            } catch (error) {
+                showToast('Lỗi so sánh: ' + error.message, 'error');
+            }
+
+            compareBtn.innerHTML = originalContent;
+            compareBtn.disabled = false;
+        });
+
+        function displayComparisonResults(data) {
+            const compareStatus = document.getElementById('compareStatus');
+            const hash1Length = document.getElementById('hash1Length');
+            const hash2Length = document.getElementById('hash2Length');
+            const totalDifferences = document.getElementById('totalDifferences');
+            const differencesList = document.getElementById('differencesList');
+
+            if (data.match) {
+                compareStatus.innerHTML = '<span class="text-green-400">✅ Hash khớp hoàn toàn</span>';
+            } else {
+                compareStatus.innerHTML = '<span class="text-red-400">❌ Hash không khớp</span>';
+            }
+
+            hash1Length.textContent = data.hash1_length;
+            hash2Length.textContent = data.hash2_length;
+            totalDifferences.textContent = data.total_differences;
+
+            // Show differences
+            differencesList.innerHTML = '';
+            if (data.differences && data.differences.length > 0) {
+                data.differences.forEach(diff => {
+                    const diffDiv = document.createElement('div');
+                    diffDiv.className = 'mobile-card rounded-lg p-2 font-mono text-xs';
+                    diffDiv.innerHTML = `
+                        Pos ${diff.position}: 
+                        <span class="text-red-400">${diff.hash1_char}</span> → 
+                        <span class="text-green-400">${diff.hash2_char}</span>
+                    `;
+                    differencesList.appendChild(diffDiv);
+                });
+            }
+        }
+
+        // Modal functionality
+        menuBtn.addEventListener('click', () => {
+            menuModal.classList.add('active');
+        });
+
+        historyBtn.addEventListener('click', () => {
+            loadHistoryModal();
+            historyModal.classList.add('active');
+        });
+
+        // Close modals
+        document.getElementById('closeQrModal').addEventListener('click', () => {
+            qrModal.classList.remove('active');
+        });
+
+        document.getElementById('closeMenuModal').addEventListener('click', () => {
+            menuModal.classList.remove('active');
+        });
+
+        document.getElementById('closeHistoryModal').addEventListener('click', () => {
+            historyModal.classList.remove('active');
+        });
+
+        // Close modals on backdrop click
+        [qrModal, menuModal, historyModal].forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+
+        // History functionality
+        function saveToHistory(item) {
+            item.id = Date.now();
+            hashHistory.unshift(item);
+            if (hashHistory.length > 50) {
+                hashHistory = hashHistory.slice(0, 50);
+            }
+            localStorage.setItem('hashHistory', JSON.stringify(hashHistory));
+        }
+
+        function loadHistoryModal() {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = '';
+
+            if (hashHistory.length === 0) {
+                historyList.innerHTML = `
+                    <div class="text-center text-gray-400 dark:text-gray-400 light:text-gray-600 font-mono text-sm py-8">
+                        Chưa có lịch sử
+                    </div>
+                `;
+                return;
+            }
+
+            hashHistory.forEach(item => {
+                const historyDiv = document.createElement('div');
+                historyDiv.className = 'mobile-card rounded-lg p-3 space-y-2 swipeable';
+                historyDiv.innerHTML = `
+                    <div class="swipe-content">
+                        <div class="flex justify-between items-center">
+                            <span class="font-mono text-xs text-gray-400">${item.type.toUpperCase()}</span>
+                            <span class="font-mono text-xs text-gray-400">${new Date(item.timestamp).toLocaleDateString()}</span>
+                        </div>
+                        <div class="font-mono text-xs text-gray-300 dark:text-gray-300 light:text-gray-700 truncate">${item.original}</div>
+                        <div class="font-mono text-xs text-green-400 break-all">${item.hash}</div>
+                    </div>
+                    <div class="swipe-actions">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </div>
+                `;
+                historyList.appendChild(historyDiv);
+                
+                // Add swipe functionality
+                setupSwipeActions(historyDiv, item.hash, () => {
+                    removeFromHistory(item.id);
+                    loadHistoryModal();
+                });
+            });
+            
+            lucide.createIcons();
+        }
+
+        function removeFromHistory(id) {
+            hashHistory = hashHistory.filter(item => item.id !== id);
+            localStorage.setItem('hashHistory', JSON.stringify(hashHistory));
+        }
+
+        document.getElementById('clearHistoryBtn').addEventListener('click', () => {
+            hashHistory = [];
+            localStorage.setItem('hashHistory', JSON.stringify(hashHistory));
+            loadHistoryModal();
+            showToast('Đã xóa lịch sử', 'info');
+        });
+
+        // Swipe actions setup
+        function setupSwipeActions(element, hash, deleteCallback = null) {
+            let startX = 0;
+            let currentX = 0;
+            let isDragging = false;
+            const swipeContent = element.querySelector('.swipe-content');
+            const swipeActions = element.querySelector('.swipe-actions');
+
+            element.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                isDragging = true;
+            });
+
+            element.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                currentX = e.touches[0].clientX;
+                const diffX = startX - currentX;
+                
+                if (diffX > 0 && diffX < 100) {
+                    swipeContent.style.transform = `translateX(-${diffX}px)`;
+                }
+            });
+
+            element.addEventListener('touchend', () => {
+                if (!isDragging) return;
+                isDragging = false;
+                
+                const diffX = startX - currentX;
+                if (diffX > 50) {
+                    // Show actions
+                    element.classList.add('swiped');
+                    swipeContent.style.transform = 'translateX(-80px)';
+                    
+                    // Auto copy or delete after 2 seconds
+                    setTimeout(() => {
+                        if (deleteCallback) {
+                            deleteCallback();
+                        } else {
+                            navigator.clipboard.writeText(hash);
+                            showToast('Đã sao chép', 'success');
+                        }
+                        element.classList.remove('swiped');
+                        swipeContent.style.transform = 'translateX(0)';
+                    }, 2000);
+                } else {
+                    // Reset
+                    element.classList.remove('swiped');
+                    swipeContent.style.transform = 'translateX(0)';
+                }
+            });
+        }
+
+        // Toast notification system
+        let toastTimeout;
+        function showToast(message, type = 'info') {
+            const icons = {
+                success: 'check-circle',
+                error: 'x-circle',
+                info: 'info',
+                warning: 'alert-triangle'
+            };
+            
+            const colors = {
+                success: 'text-green-400',
+                error: 'text-red-400',
+                info: 'text-blue-400',
+                warning: 'text-yellow-400'
+            };
+            
+            // Clear existing timeout
+            if (toastTimeout) {
+                clearTimeout(toastTimeout);
+            }
+            
+            // Hide toast first if it's showing
+            toast.classList.remove('show');
+            
+            // Update content after a brief delay
+            setTimeout(() => {
+                toastIcon.setAttribute('data-lucide', icons[type]);
+                toastIcon.className = `w-5 h-5 flex-shrink-0 ${colors[type]}`;
+                toastMessage.textContent = message;
+                lucide.createIcons();
+                
+                // Show toast
+                toast.classList.add('show');
+                
+                // Auto hide after 3 seconds
+                toastTimeout = setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }, 100);
+        }
+
+        // Touch gestures with Hammer.js
+        function initGestures() {
+            // Swipe between sections
+            const hammer = new Hammer(document.body);
+            hammer.get('swipe').set({ direction: Hammer.DIRECTION_HORIZONTAL });
+            
+            hammer.on('swipeleft', () => {
+                const sections = ['single', 'batch', 'file', 'compare'];
+                const currentIndex = sections.indexOf(currentSection);
+                if (currentIndex < sections.length - 1) {
+                    switchSection(sections[currentIndex + 1]);
+                }
+            });
+            
+            hammer.on('swiperight', () => {
+                const sections = ['single', 'batch', 'file', 'compare'];
+                const currentIndex = sections.indexOf(currentSection);
+                if (currentIndex > 0) {
+                    switchSection(sections[currentIndex - 1]);
+                }
+            });
+        }
+
+        // Load hash history from localStorage
+        function loadHashHistory() {
+            const saved = localStorage.getItem('hashHistory');
+            if (saved) {
+                try {
+                    hashHistory = JSON.parse(saved);
+                } catch (error) {
+                    console.error('Error loading hash history:', error);
+                    hashHistory = [];
+                }
+            }
+        }
+
+        // Prevent zoom on double tap
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // Initialize application
+        function init() {
+            loadHashHistory();
+            initTheme();
+            initGestures();
+            lucide.createIcons();
+            
+            // Focus on input field
+            setTimeout(() => {
+                inputText.focus();
+            }, 500);
+            
+            // Show welcome toast
+            setTimeout(() => {
+                showToast('Chào mừng đến với HashGen Pro Mobile!', 'info');
+            }, 1000);
+        }
+
+        // Start the application
+        init();
+    </script>
+</body>
+</html>
